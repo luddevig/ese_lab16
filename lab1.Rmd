@@ -1,6 +1,6 @@
 ---
 title: "lab 1"
-author: "Eric Börjesson, Ludvig Ekman, Wenjie Jiang, Tim Grube"
+author: "Eric Börjesson, Ludvig Ekman, Wenli Zhang, Tim Grube"
 date: "17/11/2020"
 output:
   pdf_document: default
@@ -57,7 +57,7 @@ These are one tailed hypothesis since we are only interested in testing one end 
 
 *Plot a histogram of the data with a bin size of 50, 75 and 100. Does the bin size change your perception of normality of the data?*
 
-All histograms are plotted with the R function hist. For configuring the bin sizes, we configured the amount of breaks. For example, the first histogram has bin sizes of 50. All times are between 100 and 400 and so we wanted to have 6 bins with a size of 50. length.out has to be equal to "number of bins" + 1. The choice where the bins start can have an influence on how the histogram looks like and also whether it looks normally distributed. An alternative would be to do not at start at 100 but at the minimum value of the data set.
+All histograms are plotted with the R function hist. For configuring the bin sizes, we configured the amount of breaks. For example, the first histogram has bin sizes of 50. All times are between 100 and 400 and so we wanted to have 6 bins with a size of 50. *length.out* has to be equal to *"number of bins" + 1*. The choice where the bins start can have an influence on how the histogram looks like and also whether it looks normally distributed. An alternative would be to do not at start at 100 but at the minimum value of the data set.
 
 With a bin size of 100, the data looks normally distributed. When reducing the size to 75, there is a first indication that it could be not normally distributed, as the number of values between 250 and 325 is quite low in comparison to 325 and 400. With a bin size of 50 it is even more obvious that it is probably not normally distributed.
 
@@ -87,7 +87,7 @@ qqPlot(d)
 
 *Test the normality of the data using the Shapiro-Wilk test. Based on the Shapiro test and the histograms and qqplots. Is the data normally distributed? You can use the function shapiro.test*
 
-If the data is normally distributed, the W-value from the Shapiro-Wilk test should be 1. Since it is 0.92, there could be an indication that the data is not normally distributed. Furthermore, the p-value is 0.17 which is higher than 0.05, so the null hypothesis (data is normally distributed) cannot be rejected. However, like explained in the video about the Shapiro-Wilk test (https://chalmers.instructure.com/courses/11055/pages/statistical-tests-for-checking-a-sample?module_item_id=116669), the test has not much power to reject a null hypothesis which is true is in this case (n=16). These are the calculated values from the test:
+If the data is normally distributed, the W-value from the Shapiro-Wilk test should be 1. Since it is 0.92, there could be an indication that the data is not normally distributed. Furthermore, the p-value is 0.17 which is higher than 0.05, so the null hypothesis (data is normally distributed) cannot be rejected. However, like explained in the [video about the Shapiro-Wilk test](https://chalmers.instructure.com/courses/11055/pages/statistical-tests-for-checking-a-sample?module_item_id=116669), the test has not much power to reject a null hypothesis which is true is in this case (n=16). These are the calculated values from the test:
 
 ```{r f}
 
@@ -118,18 +118,9 @@ The t-test is chosen because of two reasons: The variance of the population is u
 
 There is only one sample and the one-sample t-test compares the mean of one sample with the known mean 225. In contrast, two-sample t-tests compare whether there are statistical differences in the mean of two samples to determine whether they are from the same population.
 
-Since data are continuous and most of the data are normally distributed, it follows the assumptions of the one-sample t-test mostly.
+Since the data is continuous and most of the data is normally distributed, it mostly follows the assumptions of the one-sample t-test.
 
 As it is a one-tailed test and we are only focusing on one direction (mean time is higher than 225), the confidence interval (95%) is 208.04-Inf, so only a lower border is specified.
-
-
-
-
-
-
-
-
-
 
 
 
@@ -142,7 +133,6 @@ As it is a one-tailed test and we are only focusing on one direction (mean time 
 
 *Get the descriptive statistics by group using the long format data.*
 
-
 ```{r 2.a}
 performance <- read.csv("~/Downloads/performance.csv")
 df2 <- tidyr::pivot_longer(performance, cols=everything(), names_to="Group", values_to="Time")
@@ -150,12 +140,11 @@ df2 <- tidyr::pivot_longer(performance, cols=everything(), names_to="Group", val
 psych::describeBy(df2, group = df2$Group)
 ```
 
-
 ### Question b. 
 
 *The function str() allows you to inspect what type of data composes your data frame. Double check the type of data you have and convert the time to numeric and the group to categorical. Explain what numeric, categorical (factor) and ordinal data are.*
 
-Numeric data is measured and expressed as numbers and consists of either discrete or continuous data. Categorical or factor data is composed of a limited number of categories, which in this case is the categories **timeOptimized** and **timeOriginal**. Ordinal data is similar to categorical, but in comparison there exists an intrinsic ordering of the categories. One difference between numeric data and categorical/ordinal, is that the latter two can consist of natural language description while numeric data always consists of numbers. 
+Numeric data is measured and expressed as numbers and consists of either discrete or continuous data. Categorical or factor data is composed of a limited number of categories, which in this case are the categories **timeOptimized** and **timeOriginal**. Ordinal data is similar to categorical, but in comparison there exists an intrinsic ordering of the categories. One difference between numeric data and categorical/ordinal is that the latter two can consist of natural language description while numeric data always consists of numbers. 
 
 The code below checks the type of the data before and after conversion.
 
@@ -188,12 +177,12 @@ summary(model)
 
 **Statistically significant:** The t-test from the linear model above shows that the p-value for the Group-coefficient is 0.435, which is relatively high. We have previously used a significance level of 0.05 which is much lower than the p-value for the coefficient. Therefore, there is not enough evidence in the given sample to reject the null hypothesis. 
 
-Further, this indicates that there is no association between changes in the independent variable *Group* and the dependent variable *Time*. To conclude, the factor *Group* is not statistically significant which further indicates it is not possible to see any effects on the population.  
+Further, this indicates that there is no association between changes in the independent variable *Group* and the dependent variable *Time*. To conclude, the factor *Group* is not statistically significant which further indicates that it is not possible to see any effects on the population.  
 
 **Assumptions:** We make two assumptions: 
 
 * The data consists of random samples.
-* There is linear regression, that includes the following assumptions:
+* There is a linear regression that includes the following assumptions:
   1. Linearity
   2. Independence of residuals
   3. Homoscedasticity
@@ -201,16 +190,16 @@ Further, this indicates that there is no association between changes in the inde
 
 The first assumption is that the data consists of random samples. According to the provided description, each data point has been randomly selected. 
 
-Below presents a diagnostics to investigate if any of the four linear model assumptions have been violated, in order to test if it is a normalized sample. 
+Below diagnostics are presented to investigate if any of the four linear model assumptions have been violated. 
 
-The figure below is used to evaluate the linearity and homoscedasticity of the model. It plots the residuals on the y-axis and the predicted values on the x-axis. In order to be meet the two mentioned assumptions, there should not exist any distinct patterns, the residuals should be equally spread around 0 and the red line should be horizontal. A visual inspection of the figure below, suggests that these criterion are met.
+The figure below is used to evaluate the linearity and homoscedasticity of the model. It plots the residuals on the y-axis and the predicted values on the x-axis. In order to meet the two mentioned assumptions, there should not exist any distinct patterns, the residuals should be equally spread around 0 and the red line should be horizontal. A visual inspection of the figure below suggests that these criteria are met.
 
 ```{r diag.1}
 plot(model, which=1)
 ```
 
 
-Moving on, the below QQ-plot shows that the residuals are normally distributed since they follow the line. However, there seems to be some deviations in the lower quantiles. Despite this, the assumption of normaility of residuals is assumed to be met. 
+Moving on, the below QQ-plot shows that the residuals are normally distributed since they follow the line. However, there seems to be some deviations in the lower quantiles. Despite this, the assumption of normality of residuals is assumed to be met. 
 
 ```{r diag.2}
 plot(model, which=2)
@@ -218,8 +207,15 @@ plot(model, which=2)
 
 
 
-The third plot from the diagnostics could be used to evaluate the homoscedasticity and the independence of residuals. A horizontal red line indicates that these assumptions are being met. The plot below indicates that there exists a slight positive effect which could indicate that the residuals are not being randomly spread and that the violations are being violated. 
+The third plot from the diagnostics could be used to evaluate the homoscedasticity and the independence of residuals. A horizontal red line indicates that these assumptions are being met. The plot below indicates that there exists a slight positive effect which could indicate that the residuals are not being randomly spread and that the assumptions are being violated. 
 
 ```{r diag.3}
 plot(model, which=3)
 ```
+
+## Contributions
+
+All four of us attended the lab. During the lab we went through all questions, discussed them and wrote down our first thoughts. There were a few aspects that we could not solve immediately and needed to do more detailed research about it, for example task 1g and 2d. Therefore, we decided do split up the group. 
+
+Wenli and Tim concentrated on the first task and Ludvig and Eric on the second task. In these smaller groups we had a closer look at the subtasks again, improved the work from the lab and added missing information. After that we collected everything in one document and everyone of the group checked it again, so that everybody knows about all final results.
+
