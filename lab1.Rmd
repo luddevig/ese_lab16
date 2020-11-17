@@ -1,0 +1,225 @@
+---
+title: "lab 1"
+author: "Eric Börjesson, Ludvig Ekman, Wenjie Jiang, Tim Grube"
+date: "17/11/2020"
+output:
+  pdf_document: default
+  html_document: default
+---
+
+```{r setup, include=FALSE}
+library(tidyverse) 
+library(car) 
+library(knitr)
+library(psych)
+```
+
+## Time
+### Question a.
+
+*Get the descriptive statistics for this data (mean, median, standard deviation, variance). Suggested functions: mean, median, sd, var.*
+
+First, we created a vector for the time data from the assignment.
+
+```{r 1a-vector}
+d <- c(229, 186, 396,233,238,158,259,317,222,375,156,108,197,227,379,234)
+df<-data.frame(Time = d)
+kable(df)
+```
+
+Then we used four R methods for calculating the mean, the median, the standard deviation and the variance of the data set:
+
+```{r 1a-calculations}
+mean(d)
+median(d)
+sd(d)
+var(d)
+```
+
+### Question b.
+
+*On the previous question, what is being calculated? The population standard deviation or the sample standard deviation? Why?*
+
+The sample standard deviation is being calculated, since the company only provides 16 features that were chosen randomly. The data is a sample and therefore only a subset of the population (all features provided by the company).
+
+### Question c.
+
+*Set up appropriate hypothesis for investigating the issue. Think about carefully if it is one tailed or two tailed hypothesis.*
+
+As we want to find out whether the mean time to develop a feature is higher than 225 h, we have a null hypothesis which states that it is actually below or equal 225h. This enables us to either reject h0 which would be in favor of hA and therefore be an indication that the mean time is higher than 225h. If H0 cannot be rejected, there is not enough evidence that the mean time is actually higher than 225h. Consequently, these are the hypothesis:
+
+* h0: mu(d) <= 225
+* hA: mu(d) > 225
+
+These are one tailed hypothesis since we are only interested in testing one end of the distribution, so only one direction.
+
+### Question d.
+
+*Plot a histogram of the data with a bin size of 50, 75 and 100. Does the bin size change your perception of normality of the data?*
+
+All histograms are plotted with the R function hist. For configuring the bin sizes, we configured the amount of breaks. For example, the first histogram has bin sizes of 50. All times are between 100 and 400 and so we wanted to have 6 bins with a size of 50. length.out has to be equal to "number of bins" + 1. The choice where the bins start can have an influence on how the histogram looks like and also whether it looks normally distributed. An alternative would be to do not at start at 100 but at the minimum value of the data set.
+
+With a bin size of 100, the data looks normally distributed. When reducing the size to 75, there is a first indication that it could be not normally distributed, as the number of values between 250 and 325 is quite low in comparison to 325 and 400. With a bin size of 50 it is even more obvious that it is probably not normally distributed.
+
+```{r 1d}
+hist(d, breaks = seq(100, 400, length.out = 7))
+
+hist(d, breaks = seq(100, 400, length.out = 5))
+
+hist(d, breaks = seq(100, 400, length.out = 4))
+```
+
+### Question e.
+
+*Plot the qq-plot for this data. We suggest using the function qqPlot from the car package. This function has the advantage of providing 95% confidence intervals in the qq-plot. However, you can also plot it using ggplot.*
+
+The following diagram is a qq-plot of the data set. If all data points would be on the straight blue line, the data would be perfectly normally distributed. The lower values are quite good on that line and easily inside the 95% confidence interval which is shown by the blue dashed lines. However, the higher values tend to be much above the straight line and some of them are even out of the 95% confidence interval.
+
+Besides, the return result of qq-plot is 3 and 12, which means the third data (396) is the largest and the twelfth data (108) is the smallest on the data set.
+
+```{r e}
+
+qqPlot(d)
+
+```
+
+### Question f.
+
+*Test the normality of the data using the Shapiro-Wilk test. Based on the Shapiro test and the histograms and qqplots. Is the data normally distributed? You can use the function shapiro.test*
+
+If the data is normally distributed, the W-value from the Shapiro-Wilk test should be 1. Since it is 0.92, there could be an indication that the data is not normally distributed. Furthermore, the p-value is 0.17 which is higher than 0.05, so the null hypothesis (data is normally distributed) cannot be rejected. However, like explained in the video about the Shapiro-Wilk test (https://chalmers.instructure.com/courses/11055/pages/statistical-tests-for-checking-a-sample?module_item_id=116669), the test has not much power to reject a null hypothesis which is true is in this case (n=16). These are the calculated values from the test:
+
+```{r f}
+
+shapiro.test(d)
+
+```
+
+Combining the results from the histograms, the qq-plot and the Shapiro-Wilk test, there are signs that the data in general is normally distributed. However, as seen in the qq-plot and the histogram using a bin size of 50, there are some exceptions for the higher values of the data set.
+
+### Question g.
+
+*Investigate if the hypothesis is true using a one-sample t-test with a = 5%. Report and discuss the results appropriately. Why using a one-sample t-test and not a z-test? Why a one-sample test and not a two-sample test? Does it follow the assumptions of a one-sample t-test? Don’t forget to report the confidence interval (95%) for the mean value.*
+
+* *Use the function t.test with the options mu and the conf.level*
+* *Note that confidence level is 1 - a and it is already given by the t.test function*
+
+Since the p-value (0.18) is higher than 0.05, the null hypothesis will not be rejected, which means that the mean time to develop a feature is lower or equal to 225. Moreover, the t-value at the 95% border is 1.753. This can be found in a t-table by looking for 15 degrees of freedom (df) and 0.95 (one-tail). The calculated t-value is a lot smaller than this. 
+
+These are all results from the execution of the R function t.test:
+
+```{r g}
+
+t.test(d, conf.level = 0.95, mu = 225, alternative = "greater")
+
+```
+
+The t-test is chosen because of two reasons: The variance of the population is unknown and the sample size is too small (i.e. not greater than 30). This means, that a z-test cannot be used in this case.
+
+There is only one sample and the one-sample t-test compares the mean of one sample with the known mean 225. In contrast, two-sample t-tests compare whether there are statistical differences in the mean of two samples to determine whether they are from the same population.
+
+Since data are continuous and most of the data are normally distributed, it follows the assumptions of the one-sample t-test mostly.
+
+As it is a one-tailed test and we are only focusing on one direction (mean time is higher than 225), the confidence interval (95%) is 208.04-Inf, so only a lower border is specified.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Performance
+
+### Question a.
+
+*Get the descriptive statistics by group using the long format data.*
+
+
+```{r 2.a}
+performance <- read.csv("~/Downloads/performance.csv")
+df2 <- tidyr::pivot_longer(performance, cols=everything(), names_to="Group", values_to="Time")
+
+psych::describeBy(df2, group = df2$Group)
+```
+
+
+### Question b. 
+
+*The function str() allows you to inspect what type of data composes your data frame. Double check the type of data you have and convert the time to numeric and the group to categorical. Explain what numeric, categorical (factor) and ordinal data are.*
+
+Numeric data is measured and expressed as numbers and consists of either discrete or continuous data. Categorical or factor data is composed of a limited number of categories, which in this case is the categories **timeOptimized** and **timeOriginal**. Ordinal data is similar to categorical, but in comparison there exists an intrinsic ordering of the categories. One difference between numeric data and categorical/ordinal, is that the latter two can consist of natural language description while numeric data always consists of numbers. 
+
+The code below checks the type of the data before and after conversion.
+
+```{r 2.b}
+str(df2)
+df2$Group <- as.factor(df2$Group)
+df2$Time <- as.numeric(df2$Time)
+str(df2)
+```
+
+
+### Question c.
+
+*Get the parameters of this linear model and complete the equation that you wrote above. What is the value of the intercept a in the data? What is the value of b? What is the value that X assumes for selecting the optimized group? What value does it assume for the original (non optimized) group?*
+
+The linear model below uses the group as a predictor to estimate the outcome of time. Running a summary on the model gives the following values:
+
+* Intercept *a*: 16.005
+* Coefficient for *b*: 0.01
+* X assumes *0* for the optimized group and *1* for the original group.
+
+```{r 2.c}
+model <- lm(Time~Group, data=df2)
+summary(model)
+```
+
+### Question d.
+
+*The linear model provided by R also gives a p-value for the parameters. Is the factor ‘Group’ statistically significant for this model? How do you interpret this result? Don’t forget to analyze the assumptions.*
+
+**Statistically significant:** The t-test from the linear model above shows that the p-value for the Group-coefficient is 0.435, which is relatively high. We have previously used a significance level of 0.05 which is much lower than the p-value for the coefficient. Therefore, there is not enough evidence in the given sample to reject the null hypothesis. 
+
+Further, this indicates that there is no association between changes in the independent variable *Group* and the dependent variable *Time*. To conclude, the factor *Group* is not statistically significant which further indicates it is not possible to see any effects on the population.  
+
+**Assumptions:** We make two assumptions: 
+
+* The data consists of random samples.
+* There is linear regression, that includes the following assumptions:
+  1. Linearity
+  2. Independence of residuals
+  3. Homoscedasticity
+  4. Normality of residuals
+
+The first assumption is that the data consists of random samples. According to the provided description, each data point has been randomly selected. 
+
+Below presents a diagnostics to investigate if any of the four linear model assumptions have been violated, in order to test if it is a normalized sample. 
+
+The figure below is used to evaluate the linearity and homoscedasticity of the model. It plots the residuals on the y-axis and the predicted values on the x-axis. In order to be meet the two mentioned assumptions, there should not exist any distinct patterns, the residuals should be equally spread around 0 and the red line should be horizontal. A visual inspection of the figure below, suggests that these criterion are met.
+
+```{r diag.1}
+plot(model, which=1)
+```
+
+
+Moving on, the below QQ-plot shows that the residuals are normally distributed since they follow the line. However, there seems to be some deviations in the lower quantiles. Despite this, the assumption of normaility of residuals is assumed to be met. 
+
+```{r diag.2}
+plot(model, which=2)
+```
+
+
+
+The third plot from the diagnostics could be used to evaluate the homoscedasticity and the independence of residuals. A horizontal red line indicates that these assumptions are being met. The plot below indicates that there exists a slight positive effect which could indicate that the residuals are not being randomly spread and that the violations are being violated. 
+
+```{r diag.3}
+plot(model, which=3)
+```
