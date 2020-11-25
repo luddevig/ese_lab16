@@ -3,8 +3,8 @@ title: "lab 1"
 author: "Eric Börjesson, Ludvig Ekman, Wenli Zhang, Tim Grube"
 date: "17/11/2020"
 output:
-  pdf_document: default
   html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
