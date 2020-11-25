@@ -1,0 +1,215 @@
+---
+title: "lab 2"
+author: "Eric Börjesson, Ludvig Ekman, Wenli Zhang, Tim Grube"
+date: "17/11/2020"
+output:
+  html_document: default
+  pdf_document: default
+---
+
+```{r setup, include=FALSE}
+library(tidyverse) 
+library(car) 
+library(knitr)
+library(psych)
+library(pwr)
+```
+
+## Time
+### Question a.
+
+*Long text*
+
+
+```{r 1a-vector}
+data <- read.csv("./gotaflix-abn.csv")
+
+pwr::pwr.anova.test(k=5, n=80, f = 0.0621, sig.level = 0.05)
+
+```
+
+### Question b.
+
+```{r 1b}
+data <- read.csv("./gotaflix-abn.csv")
+
+data$Cover <- as.factor(data$Cover)
+data$Engagement <- as.numeric(data$Engagement) 
+
+aggregate(Engagement~Cover, data, mean) #Cover(grouping),calculating the value of Engagement in one group
+aggregate(Engagement~Cover, data, median)
+aggregate(Engagement~Cover, data, var)
+aggregate(Engagement~Cover, data, sd) 
+
+psych::describeBy(data, group = data$Cover) 
+```
+
+### Question c.
+
+```{r c}
+lindata <- lm(Engagement ~ Cover, data)
+```
+The intercept is the average engagement for the original cover. 
+
+What is the value the model gives when only the coefficient for Cover C equals to 1
+and the rest of the coefficients equals to 0?
+Intercept + CoverC 
+0.16 + 0.017..
+
+
+### Question d.
+What needs to be normal? 
+Residuals
+
+Does the S-W test agree with the qqplot? 
+Both the qq-plot and the s-w test indicates that the residuals are normal. 
+```{r d}
+
+qqPlot(lindata)
+plot(lindata)
+shapiro.test(data$Engagement) 
+
+```
+
+### Question e.
+
+The Levene test does not reject the null hyphosethis, so it is homoscedastic. 
+
+```{r e}
+
+plot(lindata)
+leveneTest(lindata)
+
+```
+
+### Question f.
+It is part of the design of the experiment, and should be verified by looking of that design. 
+
+### Question g.
+The levine test with the data in the modified file rejects homoscedasticity. 
+```{r g}
+data2 <- read.csv("./gotaflix-abn-modified.csv")
+
+data2$Cover <- as.factor(data2$Cover)
+data2$Engagement <- as.numeric(data2$Engagement) 
+
+lindata2 <- lm(Engagement ~ Cover, data2)
+
+leveneTest(lindata2)
+
+aggregate(Engagement~Cover, data2, mean) #Cover(grouping),calculating the value of Engagement in one group
+aggregate(Engagement~Cover, data2, median)
+aggregate(Engagement~Cover, data2, var)
+aggregate(Engagement~Cover, data2, sd) 
+
+psych::describeBy(data2, group = data2$Cover) 
+```
+
+### Question h. 
+
+``` {r h}
+summary(lindata)
+```
+
+
+
+
+
+
+
+
+
+
+
+## Performance
+
+### Question a.
+
+*Get the descriptive statistics by group using the long format data.*
+
+
+```{r 2.a}
+performance <- read.csv("~/Downloads/performance.csv")
+df2 <- tidyr::pivot_longer(performance, cols=everything(), names_to="Group", values_to="Time")
+
+psych::describeBy(df2, group = df2$Group)
+```
+
+
+### Question b. 
+
+*The function str() allows you to inspect what type of data composes your data frame. Double check the type of data you have and convert the time to numeric and the group to categorical. Explain what numeric, categorical (factor) and ordinal data are.*
+
+Numeric data is measured and expressed as numbers and consists of either discrete or continuous data. Categorical or factor data is composed of a limited number of categories, which in this case are the categories **timeOptimized** and **timeOriginal**. Ordinal data is similar to categorical, but in comparison there exists an intrinsic ordering of the categories. One difference between numeric data and categorical/ordinal is that the latter two can consist of natural language description while numeric data always consists of numbers. 
+
+The code below checks the type of the data before and after conversion.
+
+```{r 2.b}
+str(df2)
+df2$Group <- as.factor(df2$Group)
+df2$Time <- as.numeric(df2$Time)
+str(df2)
+```
+
+
+### Question c.
+
+*Get the parameters of this linear model and complete the equation that you wrote above. What is the value of the intercept a in the data? What is the value of b? What is the value that X assumes for selecting the optimized group? What value does it assume for the original (non optimized) group?*
+
+The linear model below uses the group as a predictor to estimate the outcome of time. Running a summary on the model gives the following values:
+
+* Intercept *a*: 16.005
+* Coefficient for *b*: 0.01
+* X assumes *0* for the optimized group and *1* for the original group.
+
+```{r 2.c}
+model <- lm(Time~Group, data=df2)
+summary(model)
+```
+
+### Question d.
+
+*The linear model provided by R also gives a p-value for the parameters. Is the factor ‘Group’ statistically significant for this model? How do you interpret this result? Don’t forget to analyze the assumptions.*
+
+**Statistically significant:** The t-test from the linear model above shows that the p-value for the Group-coefficient is 0.435, which is relatively high. We have previously used a significance level of 0.05 which is much lower than the p-value for the coefficient. Therefore, there is not enough evidence in the given sample to reject the null hypothesis. 
+
+Further, this indicates that there is no association between changes in the independent variable *Group* and the dependent variable *Time*. To conclude, the factor *Group* is not statistically significant which further indicates that it is not possible to see any effects on the population.  
+
+**Assumptions:** We make two assumptions: 
+
+* The data consists of random samples.
+* There is a linear regression that includes the following assumptions:
+  1. Linearity
+  2. Independence of residuals
+  3. Homoscedasticity
+  4. Normality of residuals
+
+The first assumption is that the data consists of random samples. According to the provided description, each data point has been randomly selected. 
+
+Below diagnostics are presented to investigate if any of the four linear model assumptions have been violated, in order to test if it is a normalized sample. 
+
+The figure below is used to evaluate the linearity and homoscedasticity of the model. It plots the residuals on the y-axis and the predicted values on the x-axis. In order to meet the two mentioned assumptions, there should not exist any distinct patterns, the residuals should be equally spread around 0 and the red line should be horizontal. A visual inspection of the figure below suggests that these criteria are met.
+
+```{r diag.1}
+plot(model, which=1)
+```
+
+
+Moving on, the below QQ-plot shows that the residuals are normally distributed since they follow the line. However, there seems to be some deviations in the lower quantiles. Despite this, the assumption of normality of residuals is assumed to be met. 
+
+```{r diag.2}
+plot(model, which=2)
+```
+
+
+
+The third plot from the diagnostics could be used to evaluate the homoscedasticity and the independence of residuals. A horizontal red line indicates that these assumptions are being met. The plot below indicates that there exists a slight positive effect which could indicate that the residuals are not being randomly spread and that the assumptions are being violated. 
+
+```{r diag.3}
+plot(model, which=3)
+```
+
+## Contributions
+
+All four of us attended the lab. During the lab we went through all questions, discussed them and wrote down our first thoughts. There were a few aspects that we could not solve immediately and needed to do more detailed research about it, for example task 1g and 2d. Therefore, we decided do split up the group. Wenli and Tim concentrated on the first task and Ludvig and Eric on the second task. In these smaller groups we had a closer look at the subtasks again, improved the work from the lab and added the missing information. After that we collected everything in one document and everyone of the group checked it again, so that everybody knows about all final results.
+
