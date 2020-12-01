@@ -126,16 +126,18 @@ summary(lindata)
 
 ## Full factorial experiment
 ### Question a.
-*How many and what are the experimental groups?*
-There are 2 different factors and each factor has 2 levels so there are total of 4 experimental groups. The groups are:
-- Group 1: Cover = Character & Summary = Character
-- Group 2: Cover = Character & Summary = Genre
-- Group 3: Cover = Genre & Summary = Character
-- Group 4: Cover = Genre & Summary = Genre
+*How many and what are the experimental groups?*  
+There are 2 different factors and each factor has 2 levels, so there are total of 4 experimental groups. The groups are:
+
+1. Cover = Character & Summary = Character
+2. Cover = Character & Summary = Genre
+3. Cover = Genre & Summary = Character
+4. Cover = Genre & Summary = Genre
+
 ### Question b.
-*The design of this experiment can be seen as a two-way ANOVA. Load the data (gotaflix-2wayANOVA.csv) and fit a linear model. Write the equation of this linear model. What does it mean the intercept value?*
-The intercept is the models estimation of the engagement value when the two factors Cover and Summary are set to 0. In this case, that is when Cover = Character and Summary = Character. 
-We have created 3 linear models below: lm.1, lm.2 and lm.3. The model lm.1 uses the two independent variables Cover & Summary to predict the dependent variable Engagement. The models lm.2 and lm.3 also includes the interaction between the factors and are modeled in two different ways. An inspection of the results below show that they produce equivalent outcome
+*The design of this experiment can be seen as a two-way ANOVA. Load the data (gotaflix-2wayANOVA.csv) and fit a linear model. Write the equation of this linear model. What does it mean the intercept value?*  
+The intercept is the models estimation of the engagement value when the two factors Cover and Summary are set to 0. In this case, that is when *Cover = Character & Summary = Character*. 
+We have created 3 linear models below: lm.1, lm.2 and lm.3. The model lm.1 uses the two independent variables *Cover & Summary* to predict the dependent variable Engagement. The models lm.2 and lm.3 also includes the interaction between the factors and are modeled in two different ways. An inspection of the results below show that they produce equivalent outcome
 ```{r twoWayAnova}
 twoWayAnova <- read.csv("~/Downloads/Lab2/gotaflix-2wayANOVA.csv", stringsAsFactors = TRUE)
 lm1 <- lm(Engagement ~ Cover + Summary, data = twoWayAnova)
@@ -146,8 +148,9 @@ summary(lm2) # alpha = 0.175266
 summary(lm3) # alpha = 0.175266
 ```
 ### Question c.
-*Analyze the assumptions of this two-way ANOVA. Independence, normality and homoscedasticity*
-**Independence** - The assumption of independence means that there should not exist any relationship between the observations within and between the groups. This is related to the design of the study and is not something we can verify from the given data set. However from the provided description, 50 movies have been randomly selected and users have been randomly assigned to the experimental groups. This would conform with the assumption of independence since both the movies and users are randomly picked. However, the movies have been randomly selected among the top 200 movies and is thereby not a random sample of the population. This could effectively influence the outcome and the result might not be possible to generalize for the entire population, that is all the movies. 
+*Analyze the assumptions of this two-way ANOVA. Independence, normality and homoscedasticity*  
+**Independence** - The assumption of independence means that there should not exist any relationship between the observations within and between the groups. This is related to the design of the study and is not something we can verify from the given data set. However from the provided description, 50 movies have been randomly selected and users have been randomly assigned to the experimental groups. This would conform with the assumption of independence since both the movies and users are randomly picked. However, the movies have been randomly selected among the top 200 movies and is thereby not a random sample of the population. This could effectively influence the outcome and the result might not be possible to generalize for the entire population, that is all the movies.  
+
 **Normality** - Below is a histogram of the residuals. A visual inspection of the histogram indicates that the residuals are normally distributed and thus the normality assumption is met.
 ```{r twoWayAnova-normality}
 # Normality of residuals - looks good
