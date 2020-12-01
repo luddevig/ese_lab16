@@ -3,9 +3,10 @@ title: "lab 2"
 author: "Eric Börjesson, Ludvig Ekman, Wenli Zhang, Tim Grube"
 date: "17/11/2020"
 output:
-  html_document: default
   pdf_document: default
+  html_document: default
 ---
+
 
 ```{r setup, include=FALSE}
 library(tidyverse) 
@@ -13,6 +14,7 @@ library(car)
 library(knitr)
 library(psych)
 library(pwr)
+library(stargazer)
 ```
 
 ## Time
@@ -121,93 +123,66 @@ summary(lindata)
 
 
 
-## Performance
 
+## Full factorial experiment
 ### Question a.
-
-*Get the descriptive statistics by group using the long format data.*
-
-
-```{r 2.a}
-performance <- read.csv("~/Downloads/performance.csv")
-df2 <- tidyr::pivot_longer(performance, cols=everything(), names_to="Group", values_to="Time")
-
-psych::describeBy(df2, group = df2$Group)
+*How many and what are the experimental groups?*
+There are 2 different factors and each factor has 2 levels so there are total of 4 experimental groups. The groups are:
+- Group 1: Cover = Character & Summary = Character
+- Group 2: Cover = Character & Summary = Genre
+- Group 3: Cover = Genre & Summary = Character
+- Group 4: Cover = Genre & Summary = Genre
+### Question b.
+*The design of this experiment can be seen as a two-way ANOVA. Load the data (gotaflix-2wayANOVA.csv) and fit a linear model. Write the equation of this linear model. What does it mean the intercept value?*
+The intercept is the models estimation of the engagement value when the two factors Cover and Summary are set to 0. In this case, that is when Cover = Character and Summary = Character. 
+We have created 3 linear models below: lm.1, lm.2 and lm.3. The model lm.1 uses the two independent variables Cover & Summary to predict the dependent variable Engagement. The models lm.2 and lm.3 also includes the interaction between the factors and are modeled in two different ways. An inspection of the results below show that they produce equivalent outcome
+```{r twoWayAnova}
+twoWayAnova <- read.csv("~/Downloads/Lab2/gotaflix-2wayANOVA.csv", stringsAsFactors = TRUE)
+lm1 <- lm(Engagement ~ Cover + Summary, data = twoWayAnova)
+lm2 <- lm(Engagement ~ Cover + Summary + Cover:Summary, data = twoWayAnova)
+lm3 <- lm(Engagement ~ Cover*Summary, data = twoWayAnova)
+summary(lm1) # alpha = 0.169028
+summary(lm2) # alpha = 0.175266
+summary(lm3) # alpha = 0.175266
 ```
-
-
-### Question b. 
-
-*The function str() allows you to inspect what type of data composes your data frame. Double check the type of data you have and convert the time to numeric and the group to categorical. Explain what numeric, categorical (factor) and ordinal data are.*
-
-Numeric data is measured and expressed as numbers and consists of either discrete or continuous data. Categorical or factor data is composed of a limited number of categories, which in this case are the categories **timeOptimized** and **timeOriginal**. Ordinal data is similar to categorical, but in comparison there exists an intrinsic ordering of the categories. One difference between numeric data and categorical/ordinal is that the latter two can consist of natural language description while numeric data always consists of numbers. 
-
-The code below checks the type of the data before and after conversion.
-
-```{r 2.b}
-str(df2)
-df2$Group <- as.factor(df2$Group)
-df2$Time <- as.numeric(df2$Time)
-str(df2)
-```
-
-
 ### Question c.
-
-*Get the parameters of this linear model and complete the equation that you wrote above. What is the value of the intercept a in the data? What is the value of b? What is the value that X assumes for selecting the optimized group? What value does it assume for the original (non optimized) group?*
-
-The linear model below uses the group as a predictor to estimate the outcome of time. Running a summary on the model gives the following values:
-
-* Intercept *a*: 16.005
-* Coefficient for *b*: 0.01
-* X assumes *0* for the optimized group and *1* for the original group.
-
-```{r 2.c}
-model <- lm(Time~Group, data=df2)
-summary(model)
+*Analyze the assumptions of this two-way ANOVA. Independence, normality and homoscedasticity*
+**Independence** - The assumption of independence means that there should not exist any relationship between the observations within and between the groups. This is related to the design of the study and is not something we can verify from the given data set. However from the provided description, 50 movies have been randomly selected and users have been randomly assigned to the experimental groups. This would conform with the assumption of independence since both the movies and users are randomly picked. However, the movies have been randomly selected among the top 200 movies and is thereby not a random sample of the population. This could effectively influence the outcome and the result might not be possible to generalize for the entire population, that is all the movies. 
+**Normality** - Below is a histogram of the residuals. A visual inspection of the histogram indicates that the residuals are normally distributed and thus the normality assumption is met.
+```{r twoWayAnova-normality}
+# Normality of residuals - looks good
+hist(lm3$residuals, main = "Histogram", xlab = "Residuals")
 ```
-
+**Homoscedasticity** - We have used the Levene's test to check for homoscedasticity, that is to verify that the variances are equal. The null hypothesis is that the population variances are equal. The Levene's test below shows that the null hypothesis can be rejected since the p-value is very low and lower than a significance value of 0.05. Thus, there is no statistical significant evidence that the variances are equal between the experimental groups.
+```{r twoWayAnova-homoscedasticity}
+leveneTest(lm3)
+```
 ### Question d.
-
-*The linear model provided by R also gives a p-value for the parameters. Is the factor ‘Group’ statistically significant for this model? How do you interpret this result? Don’t forget to analyze the assumptions.*
-
-**Statistically significant:** The t-test from the linear model above shows that the p-value for the Group-coefficient is 0.435, which is relatively high. We have previously used a significance level of 0.05 which is much lower than the p-value for the coefficient. Therefore, there is not enough evidence in the given sample to reject the null hypothesis. 
-
-Further, this indicates that there is no association between changes in the independent variable *Group* and the dependent variable *Time*. To conclude, the factor *Group* is not statistically significant which further indicates that it is not possible to see any effects on the population.  
-
-**Assumptions:** We make two assumptions: 
-
-* The data consists of random samples.
-* There is a linear regression that includes the following assumptions:
-  1. Linearity
-  2. Independence of residuals
-  3. Homoscedasticity
-  4. Normality of residuals
-
-The first assumption is that the data consists of random samples. According to the provided description, each data point has been randomly selected. 
-
-Below diagnostics are presented to investigate if any of the four linear model assumptions have been violated, in order to test if it is a normalized sample. 
-
-The figure below is used to evaluate the linearity and homoscedasticity of the model. It plots the residuals on the y-axis and the predicted values on the x-axis. In order to meet the two mentioned assumptions, there should not exist any distinct patterns, the residuals should be equally spread around 0 and the red line should be horizontal. A visual inspection of the figure below suggests that these criteria are met.
-
-```{r diag.1}
-plot(model, which=1)
+*Present the ANOVA table. What is statistically significant? What are the effect sizes? What conclusion can you make about this experiment?*
+```{r twoWayAnova-analysis, results='asis'}
+lm3.anova <- anova(lm3)
+lm3.anova
+# stargazer::stargazer(lm3.anova, header = F)
 ```
-
-
-Moving on, the below QQ-plot shows that the residuals are normally distributed since they follow the line. However, there seems to be some deviations in the lower quantiles. Despite this, the assumption of normality of residuals is assumed to be met. 
-
-```{r diag.2}
-plot(model, which=2)
+By analyzing the above results using the p-value, we can conclude which independent variables are statistically significant. Below is a summary of each independent variable including the interaction effect, using a significance level of 0.05.
+- Cover: p-value = 0.030075 < 0.05. It is significant.
+- Summary: p-value = 0.133952 > 005. It is not significant.
+- Interaction between Cover and Summary: p-value = 0.002141 < 0.05. It is significant.
+**Effect Size** - The effect size, r-squared, can be calculated using:
+SS(A) / SS(T) 
+SS(A) = factor A sum of squares
+SS(T) = total sum of squares or 
+We have only calculated the effect size of the factors that were statistically significant, which was Cover and the interaction between Cover and Summary.
+if we have huge data sets it's easy to find statistical significance (that's how the model works) but looking at the size of the effect tells us if this factor is relevant at all.
+```{r}
+TSS <- sum(lm3.anova$`Sum Sq`)
+SScover <- 0.062
+SScoverSummary <- 0.125
+r2cover <- SScover / TSS
+r2coverSummary <- SScoverSummary / TSS
+c(r2cover, r2coverSummary)
 ```
-
-
-
-The third plot from the diagnostics could be used to evaluate the homoscedasticity and the independence of residuals. A horizontal red line indicates that these assumptions are being met. The plot below indicates that there exists a slight positive effect which could indicate that the residuals are not being randomly spread and that the assumptions are being violated. 
-
-```{r diag.3}
-plot(model, which=3)
-```
+**Conclusion** - Cover and the interaction between Cover and Summary are statistically significant which means that they impact the output value for Engagement. However, the effect size is very low for both Cover (0.15%) and the interaction (0.30%). This indicates that both factors have little to no effect on the engagement level and that other variables not included in the model influence the engagement level. This could also be seen above in the ANOVA table where the sum of squares for the residuals is much higher than both factors.
 
 ## Contributions
 
