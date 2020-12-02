@@ -75,52 +75,60 @@ shapiro.test(data$Engagement)
 
 ### Question e.
 
-The Levene test does not reject the null hyphosethis, so it is homoscedastic. 
+If the assumption of homoscedasticity would not be fulfilled, the scatter plot would show that the variance is higher for some x values. For example, higher x values could lead to a higher variance of residuals. Looking at the following scatter plot, this is not the case. Instead, the variance is very similar and there just very few outliers.
 
-```{r e}
-
+```{r e1, fig.keep='last'}
 plot(lindata)
+```
+
+The Levene test shows, that the F value is a lot lower than the critical F value and the p-value is a lot higher than 0.05. Therefore, the null hypothesis cannot be rejected, so there is still no evidence that it is not homoscedastic.
+
+```{r e2}
+
 leveneTest(lindata)
 
 ```
 
 ### Question f.
-It is part of the design of the experiment, and should be verified by looking of that design. 
+
+The independence of the residuals is based on the design of the experiment and should be verified here. In this case, the users were randomly allocated into experimental groups and no one is asked twice, so the data should be independent. However, it can be checked additionally with a Durbin-Watson-test for example. The p-value is a lot higher than 0.05, so the test indicates as well, that the residuals are independent.
+
+```{r f}
+durbinWatsonTest(lindata)
+```
 
 ### Question g.
-The levine test with the data in the modified file rejects homoscedasticity. 
-```{r g}
-data2 <- read.csv("./gotaflix-abn-modified.csv")
 
-data2$Cover <- as.factor(data2$Cover)
-data2$Engagement <- as.numeric(data2$Engagement) 
+Import of data and calculating of linear model:
 
-lindata2 <- lm(Engagement ~ Cover, data2)
+```{r g1}
+dataMod <- read.csv("./gotaflix-abn-modified.csv")
 
+dataMod$Cover <- as.factor(dataMod$Cover)
+dataMod$Engagement <- as.numeric(dataMod$Engagement) 
+
+lindata2 <- lm(Engagement ~ Cover, dataMod)
+```
+
+Looking at the following scatter plot, this time there are huge differences between the variances of the different X values, especially for cover C, but also cover E. This is already a strong indication that this data is not homoscedastic.
+
+```{r g2, fig.keep='last'}
+plot(lindata2)
+```
+
+The levene test supports this statement. The F value is a lot over the critical F value and the p-value much smaller than 0.05. Therfore, the null hypothesis has to be rejected and the data is not homoscedastic.
+
+```{r g3}
 leveneTest(lindata2)
-
-aggregate(Engagement~Cover, data2, mean) #Cover(grouping),calculating the value of Engagement in one group
-aggregate(Engagement~Cover, data2, median)
-aggregate(Engagement~Cover, data2, var)
-aggregate(Engagement~Cover, data2, sd) 
-
-psych::describeBy(data2, group = data2$Cover) 
 ```
 
 ### Question h. 
 
 ``` {r h}
 summary(lindata)
+
+Anova(lindata)
 ```
-
-
-
-
-
-
-
-
-
 
 
 
