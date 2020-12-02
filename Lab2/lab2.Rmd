@@ -81,7 +81,7 @@ If the assumption of homoscedasticity would not be fulfilled, the scatter plot w
 plot(lindata)
 ```
 
-The Levene test shows, that the F value is a lot lower than the critical F value and the p-value is a lot higher than 0.05. Therefore, the null hypothesis cannot be rejected, so there is still no evidence that it is not homoscedastic.
+The Levene test shows, that the F value is a lot lower than the critical F value 2.37 and the p-value is a lot higher than 0.05. Therefore, the null hypothesis cannot be rejected, so there is still no evidence that it is not homoscedastic.
 
 ```{r e2}
 
@@ -91,7 +91,7 @@ leveneTest(lindata)
 
 ### Question f.
 
-The independence of the residuals is based on the design of the experiment and should be verified here. In this case, the users were randomly allocated into experimental groups and no one is asked twice, so the data should be independent. However, it can be checked additionally with a Durbin-Watson-test for example. The p-value is a lot higher than 0.05, so the test indicates as well, that the residuals are independent.
+The independence of the residuals is based on the design of the experiment and should be verified here. In this case, the users were randomly allocated into experimental groups and no one is asked twice, so the data should be independent. However, it can be checked additionally with a Durbin-Watson-test for example. The p-value is a lot higher than 0.05, so the null hypothesis cannot be rejected and the test indicates as well, that the residuals are independent.
 
 ```{r f}
 durbinWatsonTest(lindata)
@@ -107,27 +107,33 @@ dataMod <- read.csv("./gotaflix-abn-modified.csv")
 dataMod$Cover <- as.factor(dataMod$Cover)
 dataMod$Engagement <- as.numeric(dataMod$Engagement) 
 
-lindata2 <- lm(Engagement ~ Cover, dataMod)
+lindataMod <- lm(Engagement ~ Cover, dataMod)
 ```
 
 Looking at the following scatter plot, this time there are huge differences between the variances of the different X values, especially for cover C, but also cover E. This is already a strong indication that this data is not homoscedastic.
 
 ```{r g2, fig.keep='last'}
-plot(lindata2)
+plot(lindataMod)
 ```
 
 The levene test supports this statement. The F value is a lot over the critical F value and the p-value much smaller than 0.05. Therfore, the null hypothesis has to be rejected and the data is not homoscedastic.
 
 ```{r g3}
-leveneTest(lindata2)
+leveneTest(lindataMod)
 ```
 
 ### Question h. 
 
-``` {r h}
-summary(lindata)
+The ANOVA table shows that the F value is 5.4844 which is higher than the critical F value of 2.37, so the model is statistically significant. For calculating the F value, the mean squares for the covers (0.0588) and the mean squares for the residuals (0.0107) are determined first and then are divided.
 
+``` {r h1}
 Anova(lindata)
+```
+
+The results of the Tukey HSD test (HSD = honestly significant difference) show that there are three pairs of covers which have a significant difference. Cover C is the only cover which improves the engagement, at least in comparison to the covers A, B and D. There is no significant difference to cover E.
+
+``` {r h2}
+TukeyHSD(aov(lindata))
 ```
 
 
@@ -147,7 +153,7 @@ There are 2 different factors and each factor has 2 levels, so there are total o
 The intercept is the models estimation of the engagement value when the two factors Cover and Summary are set to 0. In this case, that is when *Cover = Character & Summary = Character*. 
 We have created 3 linear models below: lm.1, lm.2 and lm.3. The model lm.1 uses the two independent variables *Cover & Summary* to predict the dependent variable Engagement. The models lm.2 and lm.3 also includes the interaction between the factors and are modeled in two different ways. An inspection of the results below show that they produce equivalent outcome. 
 ```{r twoWayAnova}
-twoWayAnova <- read.csv("~/Downloads/Lab2/gotaflix-2wayANOVA.csv", stringsAsFactors = TRUE)
+twoWayAnova <- read.csv("./gotaflix-2wayANOVA.csv", stringsAsFactors = TRUE)
 lm1 <- lm(Engagement ~ Cover + Summary, data = twoWayAnova)
 lm2 <- lm(Engagement ~ Cover + Summary + Cover:Summary, data = twoWayAnova)
 lm3 <- lm(Engagement ~ Cover*Summary, data = twoWayAnova)
