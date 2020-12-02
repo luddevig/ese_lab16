@@ -208,5 +208,4 @@ c(r2cover, r2coverSummary)
 
 ## Contributions
 
-All four of us attended the lab. During the lab we went through all questions, discussed them and wrote down our first thoughts. There were a few aspects that we could not solve immediately and needed to do more detailed research about it, for example task 1g and 2d. Therefore, we decided do split up the group. Wenli and Tim concentrated on the first task and Ludvig and Eric on the second task. In these smaller groups we had a closer look at the subtasks again, improved the work from the lab and added the missing information. After that we collected everything in one document and everyone of the group checked it again, so that everybody knows about all final results.
-
+All four of us attended the lab. During the lab, we were able to go through the questions of the first task, discussed them and wrote down our first findings. We could not solve all aspects and only had a short look at task 2, so we split up the group: Wenli and Tim concentrated on the first task and Ludvig and Eric on the second task. After working on these parts separately, all of us checked the whole document again, so that everybody knows about all final results.
