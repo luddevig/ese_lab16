@@ -1,10 +1,10 @@
 ---
 title: "Lab 2"
 author: 
-- Eric Börjesson (TODOOOO@student.chalmers.se)
-- Ludvig Ekman (TODOOOO@student.chalmers.se)
-- Wenli Zhang (TODOOOO@student.chalmers.se)
-- Tim Grube (gusgruti@student.gu.se)
+- Eric Börjesson (ericbor@student.chalmers.se)  
+- Ludvig Ekman (eludvig@student.chalmers.se)  
+- Wenli Zhang (elsie.cheung@hotmail.com)  
+- Tim Grube (gusgruti@student.gu.se)  
 date: "`r format(Sys.time(), '%d.%m.%Y')`"
 output:
   pdf_document:
