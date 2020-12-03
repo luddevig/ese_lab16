@@ -1,12 +1,17 @@
 ---
-title: "lab 2"
-author: "Eric Börjesson, Ludvig Ekman, Wenli Zhang, Tim Grube"
-date: "17/11/2020"
+title: "Lab 2"
+author: 
+- Eric Börjesson (TODOOOO@student.chalmers.se)
+- Ludvig Ekman (TODOOOO@student.chalmers.se)
+- Wenli Zhangaa (TODOOOO@student.chalmers.se)
+- Tim Grube (gusgruti@student.gu.se)
+date: "`r format(Sys.time(), '%d.%m.%Y')`"
 output:
-  pdf_document: default
-  html_document: default
+  pdf_document:
+    latex_engine: xelatex
+  html_document:
+    df_print: paged
 ---
-
 
 ```{r setup, include=FALSE}
 library(tidyverse) 
@@ -73,6 +78,7 @@ Residuals need to be normal.
 From the following qqplot diagram, we can see that basically most of the points fall in the straight blue line so that the data are normally distributed，although there are some outliers (e.g., the point displayed as 495) and some slight skew on the tails, the qqplot is still perfect to show the data are normally distributed.
 
 Also, from the outcome of Shapiro-Wilk test, the value of D is 0.99943 which is just slightly less than 1 and still can indicate that the data is normally distributed.  Furthermore, the p-value is 0.27 which is higher than 0.05, so the null hypothesis (data is normally distributed) cannot be rejected.
+
 Both the qqplot and the Shapiro-Wilk test indicates that the residuals are normally distributed. 
 
 We can choose both qqplot and Shapiro-Wilk test to justify the normality. But regarding this experiment, the qqplot is more valuable than the Shapiro–Wilk test. Shapiro–Wilk test is suitable for the small sample size up to 2000 and justify "normality" based on p-value and the larger the sample size is more inaccurate it is to determine whether the data is normally distributed according to the p-value. As it is a large sample size of 4000, so it is advisable to use qqplot to justify the normality. The qqplot is able to reveal how the distribution is non-normal according to the characteristics(i.e., skewness, kurtosis, outliers, etc. ) and may point out solutions. 
@@ -152,8 +158,10 @@ TukeyHSD(aov(lindata))
 
 
 ## Full factorial experiment
+
 ### Question a.
 *How many and what are the experimental groups?*  
+
 There are 2 different factors and each factor has 2 levels, so there are total of 4 experimental groups. The groups are:
 
 1. Cover = Character & Summary = Character
@@ -163,6 +171,7 @@ There are 2 different factors and each factor has 2 levels, so there are total o
 
 ### Question b.
 *The design of this experiment can be seen as a two-way ANOVA. Load the data (gotaflix-2wayANOVA.csv) and fit a linear model. Write the equation of this linear model. What does it mean the intercept value?*  
+
 The intercept is the models estimation of the engagement value when the two factors Cover and Summary are set to 0. In this case, that is when *Cover = Character & Summary = Character*. 
 We have created 3 linear models below: lm.1, lm.2 and lm.3. The model lm.1 uses the two independent variables *Cover & Summary* to predict the dependent variable Engagement. The models lm.2 and lm.3 also includes the interaction between the factors and are modeled in two different ways. An inspection of the results below show that they produce equivalent outcome. 
 ```{r twoWayAnova}
@@ -174,8 +183,10 @@ summary(lm1) # alpha = 0.169028
 summary(lm2) # alpha = 0.175266
 summary(lm3) # alpha = 0.175266
 ```
+
 ### Question c.
 *Analyze the assumptions of this two-way ANOVA. Independence, normality and homoscedasticity*  
+
 **Independence** - The assumption of independence means that there should not exist any relationship between the observations within and between the groups. This is related to the design of the study and is not something we can verify from the given data set. However from the provided description, 50 movies have been randomly selected and users have been randomly assigned to the experimental groups. This would conform with the assumption of independence since both the movies and users are randomly picked. However, the movies have been randomly selected among the top 200 movies and is thereby not a random sample of the population. This could effectively influence the outcome and the result might not be possible to generalize for the entire population, that is all the movies.  
 
 **Normality** - Below is a histogram of the residuals. A visual inspection of the histogram indicates that the residuals are normally distributed and thus the normality assumption is met.
@@ -187,8 +198,10 @@ hist(lm3$residuals, main = "Histogram", xlab = "Residuals")
 ```{r twoWayAnova-homoscedasticity}
 leveneTest(lm3)
 ```
+
 ### Question d.
 *Present the ANOVA table. What is statistically significant? What are the effect sizes? What conclusion can you make about this experiment?*
+
 ```{r twoWayAnova-analysis, results='asis'}
 lm3.anova <- anova(lm3)
 lm3.anova
