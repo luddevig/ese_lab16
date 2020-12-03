@@ -3,7 +3,7 @@ title: "Lab 2"
 author: 
 - Eric Börjesson (TODOOOO@student.chalmers.se)
 - Ludvig Ekman (TODOOOO@student.chalmers.se)
-- Wenli Zhangaa (TODOOOO@student.chalmers.se)
+- Wenli Zhang (TODOOOO@student.chalmers.se)
 - Tim Grube (gusgruti@student.gu.se)
 date: "`r format(Sys.time(), '%d.%m.%Y')`"
 output:
@@ -27,7 +27,7 @@ library(stargazer)
 ### Question a.
 *What is the minimum number of customers in each group for the experiment to have the power of 90%? How many monthly customers must the company have to be able to run this experiment in 1 month? What happens with the minimum number of customers needed if the effect size decreases (and power and significance level remain constant)? What happens if the effect size increases?*
 
-Based on the background, there are 5 levels (original cover + 4 new ones) of the factor of Cover, so that the k is equal to 5. Compared to the control(original cover), the company wants to have at least 8% improvement(f=0.08) with a confidence of 95%(sig.level=0.05) and has the power of 90%(power=0.09) to develop better art covers and run experiments. 
+Based on the background, there are 5 levels (original cover + 4 new ones) of the factor of Cover, so that k is equal to 5. Compared to the control(original cover), the company wants to have at least 8% improvement(f=0.08) with a confidence of 95%(sig.level=0.05) and has the power of 90%(power=0.09) to develop better art covers and run experiments. 
 
 ```{r 1a-vector}
 data <- read.csv("./gotaflix-abn.csv")
@@ -40,14 +40,14 @@ From the result shown above, we can know that the minimum number of customers in
 
 As each group has minimum 482 customers so that the total number of customers is 2410 having to be able to run this experiment in 1 month.
 
-We decrease the f(effect size) to 0.02, the minimum number of customers significantly increase to 7703.
+We decrease the f(effect size) to 0.02, the minimum number of customers significantly increases to 7703.
 
-We increase the f(effect size) to 0.32, the minimum number of customers significantly decrease to 31.
+We increase the f(effect size) to 0.32, the minimum number of customers significantly decreases to 31.
 
 ### Question b.
 *In one month, the company collected the data (in long format) in the file gotaflix-abn.csv. Import this data to R and generate descriptive statistics for each group.*
 
-First, we import the file of gotaflix-abn.csv and then to use the function of psych::describeBy() to generate descriptive statistics for each group(cover). The results are as follows:
+First, the file gotaflix-abn.csv is imported and then the function psych::describeBy() is used to generate descriptive statistics for each group(cover). The results are as follows:
 
 ```{r 1b}
 data <- read.csv("./gotaflix-abn.csv")
@@ -63,7 +63,7 @@ The linear model below uses the cover as a predictor to estimate the outcome of 
 
 The intercept is the average engagement for the original cover(control version) of 0.16. 
 
-When the coefficient for Cover C equals to 1 and the rest of the coefficients equals to 0, the value of the average engagement is 0.178(0.16+0.018), which means that using Cover C can increase the average engagement.
+When the coefficient for cover C equals to 1 and the rest of the coefficients equals to 0, the value of the average engagement is 0.178(0.16+0.018), which means that using Cover C increases the average engagement.
 
 ```{r c}
 lindata <- lm(Engagement ~ Cover, data)
@@ -75,13 +75,13 @@ summary(lindata)
 
 Residuals need to be normal. 
 
-From the following qqplot diagram, we can see that basically most of the points fall in the straight blue line so that the data are normally distributed，although there are some outliers (e.g., the point displayed as 495) and some slight skew on the tails, the qqplot is still perfect to show the data are normally distributed.
+From the following qqplot diagram, we can see that basically most of the points fall close to the straight blue line and inside the dashed interval, so the data are normally distributed. There are some outliers (e.g., the point displayed as 495) and some slight skew on the tails, but the qqplot still shows that the data are normally distributed.
 
-Also, from the outcome of Shapiro-Wilk test, the value of D is 0.99943 which is just slightly less than 1 and still can indicate that the data is normally distributed.  Furthermore, the p-value is 0.27 which is higher than 0.05, so the null hypothesis (data is normally distributed) cannot be rejected.
+Also, from the outcome of Shapiro-Wilk test, the value of W is 0.99943 which is just slightly less than 1 and still indicates that the data is normally distributed.  Furthermore, the p-value is 0.27 which is higher than 0.05, so the null hypothesis (data is normally distributed) cannot be rejected.
 
-Both the qqplot and the Shapiro-Wilk test indicates that the residuals are normally distributed. 
+Both the qqplot and the Shapiro-Wilk test indicate that the residuals are normally distributed. 
 
-We can choose both qqplot and Shapiro-Wilk test to justify the normality. But regarding this experiment, the qqplot is more valuable than the Shapiro–Wilk test. Shapiro–Wilk test is suitable for the small sample size up to 2000 and justify "normality" based on p-value and the larger the sample size is more inaccurate it is to determine whether the data is normally distributed according to the p-value. As it is a large sample size of 4000, so it is advisable to use qqplot to justify the normality. The qqplot is able to reveal how the distribution is non-normal according to the characteristics(i.e., skewness, kurtosis, outliers, etc. ) and may point out solutions. 
+We can choose both qqplot and Shapiro-Wilk test to justify the normality. However, regarding this experiment the qqplot is more valuable than the Shapiro–Wilk test. A Shapiro–Wilk test is suitable for the small sample size up to 2000 and justifies "normality" based on p-value. The larger the sample size the more inaccurate it is to determine whether the data is normally distributed according to the p-value. As it is a large sample size of 4000, it is advisable to use a qqplot to justify the normality. The qqplot is able to reveal how the distribution is non-normal according to the characteristics(i.e., skewness, kurtosis, outliers, etc. ) and may point out solutions. 
 
 ```{r d}
 qqPlot(lindata)
@@ -91,13 +91,13 @@ shapiro.test(data$Engagement)
 ### Question e.
 *The other assumptions of the one-way ANOVA are homoscedasticity of the residuals and independence of the data. Create a scatter plot for to analyze the homogeneity of the variances and them conduct a Levene’s test.*
 
-If the assumption of homoscedasticity would not be fulfilled, the scatter plot would show that the variance is higher for some x values. For example, higher x values could lead to a higher variance of residuals. Looking at the following scatter plot, this is not the case. Instead, the variance is very similar and there just very few outliers.
+If the assumption of homoscedasticity would not be fulfilled, the scatter plot would show that the variance is higher for some x values. For example, higher x values would lead to a higher variance of residuals. Looking at the following scatter plot, this is not the case. Instead, the variance is very similar and there are just very few outliers.
 
 ```{r e1, fig.keep='last'}
 plot(lindata)
 ```
 
-The Levene test shows, that the F value is a lot lower than the critical F value 2.37 and the p-value is a lot higher than 0.05. Therefore, the null hypothesis cannot be rejected, so there is still no evidence that it is not homoscedastic.
+The Levene test shows, that the F value is a lot lower than the critical F value 2.37 and the p-value is much higher than 0.05. Therefore, the null hypothesis cannot be rejected, so there is still no evidence that it is not homoscedastic.
 
 ```{r e2}
 
@@ -108,7 +108,7 @@ leveneTest(lindata)
 ### Question f.
 *Discuss the independence assumption. How can we verify it? Is it part of the design of the experiment or the analysis?*
 
-The independence of the residuals is based on the design of the experiment and should be verified here. In this case, the users were randomly allocated into experimental groups and no one is asked twice, so the data should be independent. However, it can be checked additionally with a Durbin-Watson-test for example. The p-value is a lot higher than 0.05, so the null hypothesis cannot be rejected and the test indicates as well, that the residuals are independent.
+The independence of the residuals is based on the design of the experiment and should be verified there. In this case, the users were randomly allocated into experimental groups and no one is asked twice, so the data should be independent. However, it can be checked additionally with a Durbin-Watson-test for example. The result of the test shows that the p-value is a lot higher than 0.05, so the null hypothesis cannot be rejected and the test indicates as well, that the residuals are independent.
 
 ```{r f}
 durbinWatsonTest(lindata)
@@ -134,7 +134,7 @@ Looking at the following scatter plot, this time there are huge differences betw
 plot(lindataMod)
 ```
 
-The levene test supports this statement. The F value is a lot over the critical F value and the p-value much smaller than 0.05. Therfore, the null hypothesis has to be rejected and the data is not homoscedastic.
+The levene test supports this statement. The F value is a lot higher than the critical F value and the p-value is much smaller than 0.05. Therefore, the null hypothesis has to be rejected and the data is not homoscedastic.
 
 ```{r g3}
 leveneTest(lindataMod)
@@ -149,7 +149,7 @@ The ANOVA table shows that the F value is 5.4844 which is higher than the critic
 Anova(lindata)
 ```
 
-The results of the Tukey HSD test (HSD = honestly significant difference) show that there are three pairs of covers which have a significant difference. Cover C is the only cover which improves the engagement, at least in comparison to the covers A, B and D. There is no significant difference to cover E.
+The result of the Tukey HSD test (HSD = honestly significant difference) shows that there are three pairs of covers which have a significant difference. Cover C is the only cover which improves the engagement, at least in comparison to the covers A, B and D. There is no significant difference to cover E.
 
 ``` {r h2}
 TukeyHSD(aov(lindata))
@@ -172,8 +172,8 @@ There are 2 different factors and each factor has 2 levels, so there are total o
 ### Question b.
 *The design of this experiment can be seen as a two-way ANOVA. Load the data (gotaflix-2wayANOVA.csv) and fit a linear model. Write the equation of this linear model. What does it mean the intercept value?*  
 
-The intercept is the models estimation of the engagement value when the two factors Cover and Summary are set to 0. In this case, that is when *Cover = Character & Summary = Character*. 
-We have created 3 linear models below: lm.1, lm.2 and lm.3. The model lm.1 uses the two independent variables *Cover & Summary* to predict the dependent variable Engagement. The models lm.2 and lm.3 also includes the interaction between the factors and are modeled in two different ways. An inspection of the results below show that they produce equivalent outcome. 
+The intercept is the model's estimation of the engagement value when the two factors Cover and Summary are set to 0. In this case, that is when *Cover = Character & Summary = Character*. 
+We have created 3 linear models below: lm.1, lm.2 and lm.3. The model lm.1 uses the two independent variables *Cover & Summary* to predict the dependent variable Engagement. The models lm.2 and lm.3 also include the interaction between the factors and are modeled in two different ways. An inspection of the results below shows that they produce equivalent outcome. 
 ```{r twoWayAnova}
 twoWayAnova <- read.csv("./gotaflix-2wayANOVA.csv", stringsAsFactors = TRUE)
 lm1 <- lm(Engagement ~ Cover + Summary, data = twoWayAnova)
@@ -187,7 +187,7 @@ summary(lm3) # alpha = 0.175266
 ### Question c.
 *Analyze the assumptions of this two-way ANOVA. Independence, normality and homoscedasticity*  
 
-**Independence** - The assumption of independence means that there should not exist any relationship between the observations within and between the groups. This is related to the design of the study and is not something we can verify from the given data set. However from the provided description, 50 movies have been randomly selected and users have been randomly assigned to the experimental groups. This would conform with the assumption of independence since both the movies and users are randomly picked. However, the movies have been randomly selected among the top 200 movies and is thereby not a random sample of the population. This could effectively influence the outcome and the result might not be possible to generalize for the entire population, that is all the movies.  
+**Independence** - The assumption of independence means that there should not exist any relationship between the observations within and between the groups. This is related to the design of the study and is not something we can verify from the given data set. However from the provided description, 50 movies have been randomly selected and users have been randomly assigned to the experimental groups. This would conform with the assumption of independence since both the movies and users are randomly picked. However, the movies have been randomly selected among the top 200 movies and are thereby not a random sample of the population. This could effectively influence the outcome and the result might not be possible to generalize for the entire population, that is all the movies.  
 
 **Normality** - Below is a histogram of the residuals. A visual inspection of the histogram indicates that the residuals are normally distributed and thus the normality assumption is met.
 ```{r twoWayAnova-normality}
@@ -221,7 +221,7 @@ By analyzing the above results using the p-value, we can conclude which independ
 * SS(T) = total sum of squares   
 
 We have only calculated the effect size of the factors that were statistically significant, which was Cover and the interaction between Cover and Summary.
-if we have huge data sets it's easy to find statistical significance (that's how the model works) but looking at the size of the effect tells us if this factor is relevant at all.
+If we have huge data sets, it is easy to find statistical significance (that is how the model works) but looking at the size of the effect tells us if this factor is relevant at all.
 ```{r}
 TSS <- sum(lm3.anova$`Sum Sq`)
 SScover <- 0.062
