@@ -17,63 +17,73 @@ library(pwr)
 library(stargazer)
 ```
 
-## Time
+## A/B/n testing
+
 ### Question a.
+*What is the minimum number of customers in each group for the experiment to have the power of 90%? How many monthly customers must the company have to be able to run this experiment in 1 month? What happens with the minimum number of customers needed if the effect size decreases (and power and significance level remain constant)? What happens if the effect size increases?*
 
-*Long text*
-
+Based on the background, there are 5 levels (original cover + 4 new ones) of the factor of Cover, so that the k is equal to 5. Compared to the control(original cover), the company wants to have at least 8% improvement(f=0.08) with a confidence of 95%(sig.level=0.05) and has the power of 90%(power=0.09) to develop better art covers and run experiments. 
 
 ```{r 1a-vector}
 data <- read.csv("./gotaflix-abn.csv")
-
-pwr::pwr.anova.test(k=5, n=80, f = 0.0621, sig.level = 0.05)
-
+pwr::pwr.anova.test(k=5, n=NULL, f = 0.08, sig.level = 0.05, power = 0.9)
+pwr::pwr.anova.test(k=5, n=NULL, f = 0.02, sig.level = 0.05, power = 0.9)
+pwr::pwr.anova.test(k=5, n=NULL, f = 0.32, sig.level = 0.05, power = 0.9)
 ```
 
+From the result shown above, we can know that the minimum number of customers in each group is 482 for the experiment to have the power of 90% with a confidence of 95% to have 8% improvement.
+
+As each group has minimum 482 customers so that the total number of customers is 2410 having to be able to run this experiment in 1 month.
+
+We decrease the f(effect size) to 0.02, the minimum number of customers significantly increase to 7703.
+
+We increase the f(effect size) to 0.32, the minimum number of customers significantly decrease to 31.
+
 ### Question b.
+*In one month, the company collected the data (in long format) in the file gotaflix-abn.csv. Import this data to R and generate descriptive statistics for each group.*
+
+First, we import the file of gotaflix-abn.csv and then to use the function of psych::describeBy() to generate descriptive statistics for each group(cover). The results are as follows:
 
 ```{r 1b}
 data <- read.csv("./gotaflix-abn.csv")
-
 data$Cover <- as.factor(data$Cover)
 data$Engagement <- as.numeric(data$Engagement) 
-
-aggregate(Engagement~Cover, data, mean) #Cover(grouping),calculating the value of Engagement in one group
-aggregate(Engagement~Cover, data, median)
-aggregate(Engagement~Cover, data, var)
-aggregate(Engagement~Cover, data, sd) 
-
 psych::describeBy(data, group = data$Cover) 
 ```
 
 ### Question c.
+*Generate a linear model to fit this experiment data. Write the equation that represents this model. What does the intercept mean? What is the value the model gives when only the coefficient for Cover C equals to 1 and the rest of the coefficients equals to 0?*
+
+The linear model below uses the cover as a predictor to estimate the outcome of engagement. 
+
+The intercept is the average engagement for the original cover(control version) of 0.16. 
+
+When the coefficient for Cover C equals to 1 and the rest of the coefficients equals to 0, the value of the average engagement is 0.178(0.16+0.018), which means that using Cover C can increase the average engagement.
 
 ```{r c}
 lindata <- lm(Engagement ~ Cover, data)
+summary(lindata)
 ```
-The intercept is the average engagement for the original cover. 
-
-What is the value the model gives when only the coefficient for Cover C equals to 1
-and the rest of the coefficients equals to 0?
-Intercept + CoverC 
-0.16 + 0.017..
-
 
 ### Question d.
-What needs to be normal? 
-Residuals
+*One of the assumptions of a linear model is ‘normality’. What needs to be normal? Analyze the normality of the model using a qqplot and then use a Shapiro test. Does the Shapiro-Wilk test agree with the qqplot? Which one do you choose to justify the normality?*
 
-Does the S-W test agree with the qqplot? 
-Both the qq-plot and the s-w test indicates that the residuals are normal. 
+Residuals need to be normal. 
+
+From the following qqplot diagram, we can see that basically most of the points fall in the straight blue line so that the data are normally distributed，although there are some outliers (e.g., the point displayed as 495) and some slight skew on the tails, the qqplot is still perfect to show the data are normally distributed.
+
+Also, from the outcome of Shapiro-Wilk test, the value of D is 0.99943 which is just slightly less than 1 and still can indicate that the data is normally distributed.  Furthermore, the p-value is 0.27 which is higher than 0.05, so the null hypothesis (data is normally distributed) cannot be rejected.
+Both the qqplot and the Shapiro-Wilk test indicates that the residuals are normally distributed. 
+
+We can choose both qqplot and Shapiro-Wilk test to justify the normality. But regarding this experiment, the qqplot is more valuable than the Shapiro–Wilk test. Shapiro–Wilk test is suitable for the small sample size up to 2000 and justify "normality" based on p-value and the larger the sample size is more inaccurate it is to determine whether the data is normally distributed according to the p-value. As it is a large sample size of 4000, so it is advisable to use qqplot to justify the normality. The qqplot is able to reveal how the distribution is non-normal according to the characteristics(i.e., skewness, kurtosis, outliers, etc. ) and may point out solutions. 
+
 ```{r d}
-
 qqPlot(lindata)
-plot(lindata)
 shapiro.test(data$Engagement) 
-
 ```
 
 ### Question e.
+*The other assumptions of the one-way ANOVA are homoscedasticity of the residuals and independence of the data. Create a scatter plot for to analyze the homogeneity of the variances and them conduct a Levene’s test.*
 
 If the assumption of homoscedasticity would not be fulfilled, the scatter plot would show that the variance is higher for some x values. For example, higher x values could lead to a higher variance of residuals. Looking at the following scatter plot, this is not the case. Instead, the variance is very similar and there just very few outliers.
 
@@ -90,6 +100,7 @@ leveneTest(lindata)
 ```
 
 ### Question f.
+*Discuss the independence assumption. How can we verify it? Is it part of the design of the experiment or the analysis?*
 
 The independence of the residuals is based on the design of the experiment and should be verified here. In this case, the users were randomly allocated into experimental groups and no one is asked twice, so the data should be independent. However, it can be checked additionally with a Durbin-Watson-test for example. The p-value is a lot higher than 0.05, so the null hypothesis cannot be rejected and the test indicates as well, that the residuals are independent.
 
@@ -98,6 +109,7 @@ durbinWatsonTest(lindata)
 ```
 
 ### Question g.
+*Suppose you have received the data of the gotaflix-abn-modified.csv. Does the data have homoscedasticity?*
 
 Import of data and calculating of linear model:
 
@@ -122,7 +134,8 @@ The levene test supports this statement. The F value is a lot over the critical 
 leveneTest(lindataMod)
 ```
 
-### Question h. 
+### Question h.
+*Analyze the data (gotaflix-abn.csv) and discuss which art cover had a better engagement? First, run an Anova test and see if the model is statistically significant. Second, run the Tukey HSD post-hoc test and analyze the results?*
 
 The ANOVA table shows that the F value is 5.4844 which is higher than the critical F value of 2.37, so the model is statistically significant. For calculating the F value, the mean squares for the covers (0.0588) and the mean squares for the residuals (0.0107) are determined first and then are divided.
 
