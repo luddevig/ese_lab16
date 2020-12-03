@@ -173,7 +173,7 @@ There are 2 different factors and each factor has 2 levels, so there are total o
 *The design of this experiment can be seen as a two-way ANOVA. Load the data (gotaflix-2wayANOVA.csv) and fit a linear model. Write the equation of this linear model. What does it mean the intercept value?*  
 
 The intercept is the model's estimation of the engagement value when the two factors Cover and Summary are set to 0. In this case, that is when *Cover = Character & Summary = Character*. 
-We have created 3 linear models below: lm.1, lm.2 and lm.3. The model lm.1 uses the two independent variables *Cover & Summary* to predict the dependent variable Engagement. The models lm.2 and lm.3 also include the interaction between the factors and are modeled in two different ways. An inspection of the results below shows that they produce equivalent outcome. 
+We have created 3 linear models below: lm1, lm2 and lm3. The model lm1 uses the two independent variables *Cover & Summary* to predict the dependent variable Engagement. The models lm2 and lm3 also include the interaction between the factors and are modeled in two different ways. An inspection of the results below shows that they produce equivalent outcome. 
 ```{r twoWayAnova}
 twoWayAnova <- read.csv("./gotaflix-2wayANOVA.csv", stringsAsFactors = TRUE)
 lm1 <- lm(Engagement ~ Cover + Summary, data = twoWayAnova)
