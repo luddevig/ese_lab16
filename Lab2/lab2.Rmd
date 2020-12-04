@@ -1,5 +1,5 @@
 ---
-title: "Lab 2"
+title: "Lab 2 - Group 16"
 author: 
 - Eric Börjesson (ericbor@student.chalmers.se)  
 - Ludvig Ekman (eludvig@student.chalmers.se)  
@@ -27,7 +27,7 @@ library(stargazer)
 ### Question a.
 *What is the minimum number of customers in each group for the experiment to have the power of 90%? How many monthly customers must the company have to be able to run this experiment in 1 month? What happens with the minimum number of customers needed if the effect size decreases (and power and significance level remain constant)? What happens if the effect size increases?*
 
-Based on the background, there are 5 levels (original cover + 4 new ones) of the factor of Cover, so that k is equal to 5. Compared to the control(original cover), the company wants to have at least 8% improvement(f=0.08) with a confidence of 95%(sig.level=0.05) and has the power of 90%(power=0.09) to develop better art covers and run experiments. 
+Based on the background, there are 5 levels (original cover + 4 new ones) of the factor of Cover, so that k is equal to 5. Compared to the control (original cover), the company wants to have at least 8% improvement (f=0.08) with a confidence of 95% (sig.level=0.05) and has the power of 90% (power=0.09) to develop better art covers and run experiments. 
 
 ```{r 1a-vector}
 data <- read.csv("./gotaflix-abn.csv")
@@ -36,18 +36,18 @@ pwr::pwr.anova.test(k=5, n=NULL, f = 0.02, sig.level = 0.05, power = 0.9)
 pwr::pwr.anova.test(k=5, n=NULL, f = 0.32, sig.level = 0.05, power = 0.9)
 ```
 
-From the result shown above, we can know that the minimum number of customers in each group is 482 for the experiment to have the power of 90% with a confidence of 95% to have 8% improvement.
+From the result shown above, we can see that the minimum number of customers in each group is 482 for the experiment to have the power of 90% with a confidence of 95% to have 8% improvement.
 
-As each group has minimum 482 customers so that the total number of customers is 2410 having to be able to run this experiment in 1 month.
+As each group has minimum 482 customers, the total number of customers is 2410 having to be able to run this experiment in 1 month.
 
-We decrease the f(effect size) to 0.02, the minimum number of customers significantly increases to 7703.
+If we decrease f (effect size) to 0.02, the minimum number of customers significantly increases to 7703.
 
-We increase the f(effect size) to 0.32, the minimum number of customers significantly decreases to 31.
+If we increase f (effect size) to 0.32, the minimum number of customers significantly decreases to 31.
 
 ### Question b.
 *In one month, the company collected the data (in long format) in the file gotaflix-abn.csv. Import this data to R and generate descriptive statistics for each group.*
 
-First, the file gotaflix-abn.csv is imported and then the function psych::describeBy() is used to generate descriptive statistics for each group(cover). The results are as follows:
+First, the file gotaflix-abn.csv is imported and then the function psych::describeBy() is used to generate descriptive statistics for each group (cover). The results are as follows:
 
 ```{r 1b}
 data <- read.csv("./gotaflix-abn.csv")
@@ -61,9 +61,9 @@ psych::describeBy(data, group = data$Cover)
 
 The linear model below uses the cover as a predictor to estimate the outcome of engagement. 
 
-The intercept is the average engagement for the original cover(control version) of 0.16. 
+The intercept is the average engagement for the original cover (control version) of 0.16. 
 
-When the coefficient for cover C equals to 1 and the rest of the coefficients equals to 0, the value of the average engagement is 0.178(0.16+0.018), which means that using Cover C increases the average engagement.
+When the coefficient for cover C is equal to 1 and the rest of the coefficients is equal to 0, the value of the average engagement is 0.178 (0.16+0.018), which means that using Cover C increases the average engagement.
 
 ```{r c}
 lindata <- lm(Engagement ~ Cover, data)
@@ -73,15 +73,15 @@ summary(lindata)
 ### Question d.
 *One of the assumptions of a linear model is ‘normality’. What needs to be normal? Analyze the normality of the model using a qqplot and then use a Shapiro test. Does the Shapiro-Wilk test agree with the qqplot? Which one do you choose to justify the normality?*
 
-Residuals need to be normal. 
+The residuals need to be normal. 
 
 From the following qqplot diagram, we can see that basically most of the points fall close to the straight blue line and inside the dashed interval, so the data are normally distributed. There are some outliers (e.g., the point displayed as 495) and some slight skew on the tails, but the qqplot still shows that the data are normally distributed.
 
-Also, from the outcome of Shapiro-Wilk test, the value of W is 0.99943 which is just slightly less than 1 and still indicates that the data is normally distributed.  Furthermore, the p-value is 0.27 which is higher than 0.05, so the null hypothesis (data is normally distributed) cannot be rejected.
+From the outcome of Shapiro-Wilk test, the value of W is also 0.99943 which is just slightly less than 1 and still indicates that the data is normally distributed. Furthermore, the p-value is 0.27 which is higher than 0.05, so the null hypothesis (data is normally distributed) cannot be rejected.
 
 Both the qqplot and the Shapiro-Wilk test indicate that the residuals are normally distributed. 
 
-We can choose both qqplot and Shapiro-Wilk test to justify the normality. However, regarding this experiment the qqplot is more valuable than the Shapiro–Wilk test. A Shapiro–Wilk test is suitable for the small sample size up to 2000 and justifies "normality" based on p-value. The larger the sample size the more inaccurate it is to determine whether the data is normally distributed according to the p-value. As it is a large sample size of 4000, it is advisable to use a qqplot to justify the normality. The qqplot is able to reveal how the distribution is non-normal according to the characteristics(i.e., skewness, kurtosis, outliers, etc. ) and may point out solutions. 
+We can choose both qqplot and Shapiro-Wilk test to justify the normality. However, regarding this experiment the qqplot is more valuable than the Shapiro–Wilk test. A Shapiro–Wilk test is suitable for a small sample size up to 2000 and justifies "normality" based on the p-value. The larger the sample size the more inaccurate it is to determine whether the data is normally distributed according to the p-value. As it is a large sample size of 4000, it is advisable to use a qqplot to justify the normality. The qqplot is able to reveal how the distribution is non-normal according to the characteristics (i.e., skewness, kurtosis, outliers, etc.).
 
 ```{r d}
 qqPlot(lindata)
@@ -91,18 +91,16 @@ shapiro.test(data$Engagement)
 ### Question e.
 *The other assumptions of the one-way ANOVA are homoscedasticity of the residuals and independence of the data. Create a scatter plot for to analyze the homogeneity of the variances and them conduct a Levene’s test.*
 
-If the assumption of homoscedasticity would not be fulfilled, the scatter plot would show that the variance is higher for some x values. For example, higher x values would lead to a higher variance of residuals. Looking at the following scatter plot, this is not the case. Instead, the variance is very similar and there are just very few outliers.
+If the assumption of homoscedasticity would not be fulfilled, the scatter plot would show that the variance is higher for some x values. For example, higher x values would lead to a higher variance of the residuals. Looking at the following scatter plot, this is not the case. Instead, the variance is very similar and there are just very few outliers.
 
 ```{r e1, fig.keep='last'}
 plot(lindata)
 ```
 
-The Levene test shows, that the F value is a lot lower than the critical F value 2.37 and the p-value is much higher than 0.05. Therefore, the null hypothesis cannot be rejected, so there is still no evidence that it is not homoscedastic.
+The Levene test shows, that the F value is a lot lower than the critical F value of 2.37 and the p-value is much higher than 0.05. Therefore, the null hypothesis cannot be rejected, so there is still no evidence that it is not homoscedastic.
 
 ```{r e2}
-
 leveneTest(lindata)
-
 ```
 
 ### Question f.
@@ -117,7 +115,7 @@ durbinWatsonTest(lindata)
 ### Question g.
 *Suppose you have received the data of the gotaflix-abn-modified.csv. Does the data have homoscedasticity?*
 
-Import of data and calculating of linear model:
+Import of the data and calculating of a linear model:
 
 ```{r g1}
 dataMod <- read.csv("./gotaflix-abn-modified.csv")
@@ -162,7 +160,7 @@ TukeyHSD(aov(lindata))
 ### Question a.
 *How many and what are the experimental groups?*  
 
-There are 2 different factors and each factor has 2 levels, so there are total of 4 experimental groups. The groups are:
+There are 2 different factors and each factor has 2 levels, so there are a total of 4 experimental groups. The groups are:
 
 1. Cover = Character & Summary = Character
 2. Cover = Character & Summary = Genre
@@ -173,7 +171,9 @@ There are 2 different factors and each factor has 2 levels, so there are total o
 *The design of this experiment can be seen as a two-way ANOVA. Load the data (gotaflix-2wayANOVA.csv) and fit a linear model. Write the equation of this linear model. What does it mean the intercept value?*  
 
 The intercept is the model's estimation of the engagement value when the two factors Cover and Summary are set to 0. In this case, that is when *Cover = Character & Summary = Character*. 
+
 We have created 3 linear models below: lm1, lm2 and lm3. The model lm1 uses the two independent variables *Cover & Summary* to predict the dependent variable Engagement. The models lm2 and lm3 also include the interaction between the factors and are modeled in two different ways. An inspection of the results below shows that they produce equivalent outcome. 
+
 ```{r twoWayAnova}
 twoWayAnova <- read.csv("./gotaflix-2wayANOVA.csv", stringsAsFactors = TRUE)
 lm1 <- lm(Engagement ~ Cover + Summary, data = twoWayAnova)
@@ -187,26 +187,28 @@ summary(lm3) # alpha = 0.175266
 ### Question c.
 *Analyze the assumptions of this two-way ANOVA. Independence, normality and homoscedasticity*  
 
-**Independence** - The assumption of independence means that there should not exist any relationship between the observations within and between the groups. This is related to the design of the study and is not something we can verify from the given data set. However from the provided description, 50 movies have been randomly selected and users have been randomly assigned to the experimental groups. This would conform with the assumption of independence since both the movies and users are randomly picked. However, the movies have been randomly selected among the top 200 movies and are thereby not a random sample of the population. This could effectively influence the outcome and the result might not be possible to generalize for the entire population, that is all the movies.  
+**Independence** - The assumption of independence means that there should not exist any relationship between the observations within and between the groups. This is related to the design of the study and is not something we can verify from the given data set. However, from the provided description, 50 movies have been randomly selected and users have been randomly assigned to the experimental groups. This would conform with the assumption of independence since both the movies and users are randomly picked. However, the movies have been randomly selected among the top 200 movies and are thereby not a random sample of the population. This could effectively influence the outcome and the result might not be possible to generalize for the entire population, that is all the movies.  
 
 **Normality** - Below is a histogram of the residuals. A visual inspection of the histogram indicates that the residuals are normally distributed and thus the normality assumption is met.
+
 ```{r twoWayAnova-normality}
 # Normality of residuals - looks good
 hist(lm3$residuals, main = "Histogram", xlab = "Residuals")
 ```
-**Homoscedasticity** - We have used scale plot and the Levene's test to check for homoscedasticity, that is to verify that the variances are equal. The null hypothesis is that the population variances are equal. 
+
+**Homoscedasticity** - We have used a scale plot and the Levene's test to check for homoscedasticity, that is to verify that the variances are equal. The null hypothesis is that the population variances are equal. 
 
 The non-straight line in the scale plot below also indicates that there is no homoscedasticity. 
+
 ```{r twoWayAnova-homoscedasticity-plot}
 plot(lm3,3)
 ```
 
 The Levene's test below shows that the null hypothesis can be rejected since the p-value is very low and lower than a significance value of 0.05. Thus, there is a strong indication that the variances are not equal between the experimental groups.
+
 ```{r twoWayAnova-homoscedasticity-levene}
 leveneTest(lm3)
 ```
-
-
 
 ### Question d.
 *Present the ANOVA table. What is statistically significant? What are the effect sizes? What conclusion can you make about this experiment?*
@@ -214,18 +216,17 @@ leveneTest(lm3)
 ```{r twoWayAnova-analysis}
 lm3.anova <- anova(lm3)  
 lm3.anova  
-
 ```
 
 ```{r results='asis'}
 #stargazer::stargazer(lm3.anova, header = F)
 ```
+
 By analyzing the above results using the p-value, we can conclude which independent variables are statistically significant. Below is a summary of each independent variable including the interaction effect, using a significance level of 0.05.  
 
 - Cover: p-value = 0.030075 < 0.05. It is significant.
 - Summary: p-value = 0.133952 > 005. It is not significant.
 - Interaction between Cover and Summary: p-value = 0.002141 < 0.05. It is significant.
-
 
 **Effect Size** - The effect size, r-squared, can be calculated using:  
 
@@ -235,6 +236,7 @@ By analyzing the above results using the p-value, we can conclude which independ
 
 We have only calculated the effect size of the factors that were statistically significant, which was Cover and the interaction between Cover and Summary.
 If we have huge data sets, it is easy to find statistical significance (that is how the model works) but looking at the size of the effect tells us if this factor is relevant at all.
+
 ```{r}
 TSS <- sum(lm3.anova$`Sum Sq`)
 SScover <- 0.062
@@ -243,7 +245,8 @@ r2cover <- SScover / TSS
 r2coverSummary <- SScoverSummary / TSS
 c(r2cover, r2coverSummary)
 ```
-**Conclusion** - Cover and the interaction between Cover and Summary are statistically significant which means that they impact the output value for Engagement. However, the effect size is very low for both Cover (0.15%) and the interaction (0.30%). This indicates that both factors have little to no effect on the engagement level and that other variables not included in the model influence the engagement level. This could also be seen above in the ANOVA table where the sum of squares for the residuals is much higher than both factors.
+
+**Conclusion** - Cover and the interaction between Cover and Summary are statistically significant which means that they impact the output value for Engagement. However, the effect size is very low for both Cover (0.15%) and the interaction (0.30%). This indicates that both factors have little to no effect on the engagement level and that other variables not included in the model influence the engagement level. This could also be seen above in the ANOVA table where the sum of squares for the residuals is much higher than for both factors.
 
 ## Contributions
 
