@@ -201,7 +201,7 @@ The non-straight line in the scale plot below also indicates that there is no ho
 plot(lm3,3)
 ```
 
-The Levene's test below shows that the null hypothesis can be rejected since the p-value is very low and lower than a significance value of 0.05. Thus, there is no statistical significant evidence that the variances are equal between the experimental groups.
+The Levene's test below shows that the null hypothesis can be rejected since the p-value is very low and lower than a significance value of 0.05. Thus, there is a strong indication that the variances are not equal between the experimental groups.
 ```{r twoWayAnova-homoscedasticity-levene}
 leveneTest(lm3)
 ```
