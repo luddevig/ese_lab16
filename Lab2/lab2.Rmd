@@ -3,7 +3,7 @@ title: "Lab 2"
 author: 
 - Eric Börjesson (ericbor@student.chalmers.se)  
 - Ludvig Ekman (eludvig@student.chalmers.se)  
-- Wenli Zhang (elsie.cheung@hotmail.com)  
+- Wenli Zhang (wenliz@student.chalmers.se)  
 - Tim Grube (gusgruti@student.gu.se)  
 date: "`r format(Sys.time(), '%d.%m.%Y')`"
 output:
