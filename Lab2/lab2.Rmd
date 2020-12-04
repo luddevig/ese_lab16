@@ -202,10 +202,14 @@ leveneTest(lm3)
 ### Question d.
 *Present the ANOVA table. What is statistically significant? What are the effect sizes? What conclusion can you make about this experiment?*
 
-```{r twoWayAnova-analysis, results='asis'}
-lm3.anova <- anova(lm3)
-lm3.anova
-stargazer::stargazer(lm3.anova, header = F)
+```{r twoWayAnova-analysis}
+lm3.anova <- anova(lm3)  
+lm3.anova  
+
+```
+
+```{r results='asis'}
+#stargazer::stargazer(lm3.anova, header = F)
 ```
 By analyzing the above results using the p-value, we can conclude which independent variables are statistically significant. Below is a summary of each independent variable including the interaction effect, using a significance level of 0.05.  
 
