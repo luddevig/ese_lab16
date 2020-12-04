@@ -194,10 +194,19 @@ summary(lm3) # alpha = 0.175266
 # Normality of residuals - looks good
 hist(lm3$residuals, main = "Histogram", xlab = "Residuals")
 ```
-**Homoscedasticity** - We have used the Levene's test to check for homoscedasticity, that is to verify that the variances are equal. The null hypothesis is that the population variances are equal. The Levene's test below shows that the null hypothesis can be rejected since the p-value is very low and lower than a significance value of 0.05. Thus, there is no statistical significant evidence that the variances are equal between the experimental groups.
-```{r twoWayAnova-homoscedasticity}
+**Homoscedasticity** - We have used scale plot and the Levene's test to check for homoscedasticity, that is to verify that the variances are equal. The null hypothesis is that the population variances are equal. 
+
+The non-straight line in the scale plot below also indicates that there is no homoscedasticity. 
+```{r twoWayAnova-homoscedasticity-plot}
+plot(lm3,3)
+```
+
+The Levene's test below shows that the null hypothesis can be rejected since the p-value is very low and lower than a significance value of 0.05. Thus, there is no statistical significant evidence that the variances are equal between the experimental groups.
+```{r twoWayAnova-homoscedasticity-levene}
 leveneTest(lm3)
 ```
+
+
 
 ### Question d.
 *Present the ANOVA table. What is statistically significant? What are the effect sizes? What conclusion can you make about this experiment?*
@@ -220,9 +229,9 @@ By analyzing the above results using the p-value, we can conclude which independ
 
 **Effect Size** - The effect size, r-squared, can be calculated using:  
 
-* SS(A) / SS(T)  
-* SS(A) = factor A sum of squares  
-* SS(T) = total sum of squares   
+* SS(A) / SS(T) 
+* SS(A) = factor A sum of squares 
+* SS(T) = total sum of squares 
 
 We have only calculated the effect size of the factors that were statistically significant, which was Cover and the interaction between Cover and Summary.
 If we have huge data sets, it is easy to find statistical significance (that is how the model works) but looking at the size of the effect tells us if this factor is relevant at all.
