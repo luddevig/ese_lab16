@@ -1,0 +1,31 @@
+---
+title: "Lab 3"
+author: 
+- Eric Börjesson (ericbor@student.chalmers.se)  
+- Ludvig Ekman (eludvig@student.chalmers.se)  
+- Wenli Zhang (wenliz@student.chalmers.se)  
+- Tim Grube (gusgruti@student.gu.se)  
+date: "`r format(Sys.time(), '%d.%m.%Y')`"
+output:
+  pdf_document:
+    latex_engine: xelatex
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+library(tidyverse) 
+library(car) 
+library(knitr)
+library(psych)
+library(pwr)
+library(stargazer)
+```
+
+## A/B/n testing
+
+### Question a.
+
+## Contributions
+
+All four of us attended the lab. During the lab, we were able to go through the questions of the first task, discussed them and wrote down our first findings. We could not solve all aspects and only had a short look at task 2, so we split up the group: Wenli and Tim concentrated on the first task and Ludvig and Eric on the second task. After working on these parts separately, all of us checked the whole document again, so that everybody knows about all final results.
