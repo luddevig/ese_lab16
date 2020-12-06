@@ -22,7 +22,7 @@ library(pwr)
 library(stargazer)
 ```
 
-## A/B/n testing
+## 
 
 ### Question a.
 
