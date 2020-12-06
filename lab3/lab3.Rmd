@@ -1,5 +1,5 @@
 ---
-title: "Lab 3"
+title: "Lab 3 - Group 16"
 author: 
 - Eric Börjesson (ericbor@student.chalmers.se)  
 - Ludvig Ekman (eludvig@student.chalmers.se)  
