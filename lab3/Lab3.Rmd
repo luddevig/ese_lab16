@@ -42,7 +42,8 @@ The experience of the team is believed to effect the outcome of the experiment, 
 
 The experiment will have two controlling variables. The first is too ensure the teams have the same workload and the second to control the work hours and breaks, and thus ensuring consistency in work time. 
 
-The experiment will be a block-design experiment with the following 6 experimental groups:  
+The experiment will be a block-design experiment with the following 6 experimental groups:   
+
 - G1: Work place = Home, Experience = LE
 - G2: Work place = Home, Experience = ME
 - G3: Work place = Mix, Experience = LE
@@ -83,10 +84,11 @@ We will conduct a balanced one way ANOVA??
 ## 10. Discuss possible threats to validity and replication considerations
 
 *Validity.*
-We have focused on the four main types of validity threats discussed by @wohlin2012experimentation:  
-1. **Conclusion validity**. The conclusion validity is strongly related to analyzing the outcome and determining if there is a significant effect of the factor. This could be determined by using the different tools provided by R and supporting packages and functions. However, we must analyze the outcome together with the assumptions (such as chosen power, effect size and significance level) to make appropriate conclusions.
-2. **Construct validity**. This aspect is related to the generalization of the results to the theory behind it and is connected to how well the experiment measured what is intended. One threat related to this is the fact that the behavior of the subjects participating in the experiment might be affected just by the fact that they are part of the study. It is a valid threat in our case since it is quite hard to apply the treatment in this study without them being aware of it.
-3. **Internal validity**. If we observe a significant effect of a treatment on the outcome, we might still not be sure that the observed factors was the actual cause. There might exist other factors that we have not included or controlled that effect the outcome. One example could be that employees working from home do not need to commute to work.
+We have focused on the four main types of validity threats discussed by @wohlin2012experimentation:   
+
+1. **Conclusion validity**. The conclusion validity is strongly related to analyzing the outcome and determining if there is a significant effect of the factor. This could be determined by using the different tools provided by R and supporting packages and functions. However, we must analyze the outcome together with the assumptions (such as chosen power, effect size and significance level) to make appropriate conclusions. 
+2. **Construct validity**. This aspect is related to the generalization of the results to the theory behind it and is connected to how well the experiment measured what is intended. One threat related to this is the fact that the behavior of the subjects participating in the experiment might be affected just by the fact that they are part of the study. It is a valid threat in our case since it is quite hard to apply the treatment in this study without them being aware of it. 
+3. **Internal validity**. If we observe a significant effect of a treatment on the outcome, we might still not be sure that the observed factors was the actual cause. There might exist other factors that we have not included or controlled that effect the outcome. One example could be that employees working from home do not need to commute to work. 
 4. ***External validity**. This is described in the replication section below, but summarizing it can be hard to repeat the experiment since there are many specific conditions that can not be measured or controlled in our experiment. 
 
 *Replication.*
