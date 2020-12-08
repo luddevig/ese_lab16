@@ -36,10 +36,13 @@ The concept of technical debt within the software engineering field is recognize
 The objective of this experiment is to compare the quality of software artifacts produced by teams working in different locations. The aim is to investigate if the work place influences the quality of the code.  
 
 ## 3. Describe the design of the experiment
-The experiment will consist of working place being a factor and the experience of the team being a blocking factor. The factor working place will be composed of three levels: everyone working from home (Home), a mixture of the team working from home and from the office (Mix), everyone working in the office (Office). The experience of the team is believed to effect the outcome of the experiment, but this influence and variation is not of interest in our study and thus used as a blocking variable. The blocking variable is measured as the average time each team member has worked as a software engineer and it has two levels: less experiences (LE) and more experienced (ME). A team is classified as less experienced if the average time working as a software engineer of the team members is 10 years or less, otherwise the team is classified as more experienced. The experiment will have two controlling variables. The first is too ensure the teams have the same workload and the second to control the work hours and breaks, and thus ensuring consistency in work time. 
+The experiment will consist of working place being a factor and the experience of the team being a blocking factor. The factor working place will be composed of three levels: everyone working from home (Home), a mixture of the team working from home and from the office (Mix), everyone working in the office (Office). 
 
-The experiment will be a block-design experiment with the following 6 experimental groups:
+The experience of the team is believed to effect the outcome of the experiment, but this influence and variation is not of interest in our study and thus used as a blocking variable. The blocking variable is measured as the average time each team member has worked as a software engineer and it has two levels: less experiences (LE) and more experienced (ME). A team is classified as less experienced if the average time working as a software engineer of the team members is 10 years or less, otherwise the team is classified as more experienced. 
 
+The experiment will have two controlling variables. The first is too ensure the teams have the same workload and the second to control the work hours and breaks, and thus ensuring consistency in work time. 
+
+The experiment will be a block-design experiment with the following 6 experimental groups:  
 - G1: Work place = Home, Experience = LE
 - G2: Work place = Home, Experience = ME
 - G3: Work place = Mix, Experience = LE
@@ -56,7 +59,7 @@ We have used the *pwr* package in R to conduct a power analysis. The package is 
 ```{r power-analysis}
 pwr::pwr.anova.test(k= 6, n = 10, sig.level = 0.05, power = 0.9)
 ```
-This gives us an effect size of approx. 55%. Cohens presents conventional criterion for the effect sizes where 0.3 is small effect, 05 is medium and 0.8 is a large effect size. Thus, the estimated effect size is just above a medium effect size. While the p-value could be useful to determine if an effect exists in the population, the effect size is important since it provides the magnitude of differences among groups and thus the strength of the experimental results.
+This gives us an effect size of approx. 55%. Cohens presents conventional criterion for the effect sizes where 0.3 is small effect, 0.5 is medium and 0.8 is a large effect size. Thus, the estimated effect size is just above a medium effect size. While the p-value could be useful to determine if an effect exists in the population, the effect size is important since it provides the magnitude of differences among groups and thus the strength of the experimental results.
 
 
 ## 5. What are your independent variables?
@@ -72,7 +75,7 @@ h0: The work location has no affect on the technical debt.
 h1: The work location has an affect on the technical debt.
 
 ## 8. Describe your data collection procedure (max 1 paragraph)
-SonarQube is a tool to used for continuous inspection of code quality and includes several metrcis such as technical debt. The tool be used to measure technical debt of the software artifacts produced by the teams.
+SonarQube is a tool used for continuous inspection of code quality and includes several metrcis such as technical debt. The tool be used to measure technical debt of the software artifacts produced by the teams.
 
 ## 9. Describe how you are going to analyze the data to answer your hypotheses. 
 We will conduct a balanced one way ANOVA??
@@ -80,15 +83,14 @@ We will conduct a balanced one way ANOVA??
 ## 10. Discuss possible threats to validity and replication considerations
 
 *Validity.*
-We have focused on the four main types of validity threats discussed by @wohlin2012experimentation.
-
+We have focused on the four main types of validity threats discussed by @wohlin2012experimentation:  
 1. **Conclusion validity**. The conclusion validity is strongly related to analyzing the outcome and determining if there is a significant effect of the factor. This could be determined by using the different tools provided by R and supporting packages and functions. However, we must analyze the outcome together with the assumptions (such as chosen power, effect size and significance level) to make appropriate conclusions.
 2. **Construct validity**. This aspect is related to the generalization of the results to the theory behind it and is connected to how well the experiment measured what is intended. One threat related to this is the fact that the behavior of the subjects participating in the experiment might be affected just by the fact that they are part of the study. It is a valid threat in our case since it is quite hard to apply the treatment in this study without them being aware of it.
 3. **Internal validity**. If we observe a significant effect of a treatment on the outcome, we might still not be sure that the observed factors was the actual cause. There might exist other factors that we have not included or controlled that effect the outcome. One example could be that employees working from home do not need to commute to work.
 4. ***External validity**. This is described in the replication section below, but summarizing it can be hard to repeat the experiment since there are many specific conditions that can not be measured or controlled in our experiment. 
 
 *Replication.*
-Replication is an extremely important aspect since a new knowledge is generally not accepted until it has been repeated and verified by external agents [@juristo2013basics]. According to @juristo2013basics, there are two type of replication: external replication where the experiment is repeated by independent researchers and internal validation which is run within the experiment itself. Possible threats to both internal and external validations is the problem of similarity between repeated experiments. Replication of an experiments aims at repeated the experiment under specific preconditions. In our experiment, there are multiple elements and conditions, such as the team members, the tasks and experience levels which are very speficic and thereby hard to replicate.   
+Replication is an extremely important aspect since a new knowledge is generally not accepted until it has been repeated and verified by external agents [@juristo2013basics]. According to @juristo2013basics, there are two type of replication: external replication where the experiment is repeated by independent researchers and internal validation which is run within the experiment itself. Possible threats to both internal and external validations is the problem of similarity between repeated experiments. Replication of an experiment aims at repeating the experiment under specific preconditions. In our experiment, there are multiple elements and conditions, such as the team members, the tasks and experience levels which are very specific and thereby hard to replicate.   
 
 # Contributions
 
