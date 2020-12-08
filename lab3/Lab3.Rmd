@@ -1,0 +1,97 @@
+---
+title: "Lab 3 - Group 16"
+author: 
+- Eric Börjesson (ericbor@student.chalmers.se)  
+- Ludvig Ekman (eludvig@student.chalmers.se)  
+- Wenli Zhang (wenliz@student.chalmers.se)
+- Tim Grube (gusgruti@student.gu.se)
+date: "`r format(Sys.time(), '%d.%m.%Y')`"
+output:
+  pdf_document:
+    latex_engine: xelatex
+  html_document:
+    df_print: paged
+bibliography: lab3references.bib
+---
+
+```{r setup, include=FALSE}
+# library(tidyverse) 
+# library(car) 
+# library(knitr)
+# library(psych)
+library(pwr)
+# library(stargazer)
+```
+
+# Design an experiment
+
+## 1. Add a brief description of the context and the problem where you want to conduct the experiment (max 2 paragraphs). And at least 2 references
+The Covid pandemic has changed the way of working for many companies and their employees. With social distancing and restrictions being implemented by governments and companies, employees are now working from home more than ever before. Even before the pandemic, experiments have been conducted in order to understand the effects of having employees working from home rather in the office. @bloom2014homework published a study where they randomly assigned employees to either work in the office or at home. The experiment indicated that working from home led to an increase in work performance, and the positive effect of working from home has also been discussed in other studies [@hill2003does]. 
+
+The concept of technical debt within the software engineering field is recognized as something that is unavoidable and it is therefore necessary for companies to track, monitor and take action upon the technical debt [@6280547]. This experiment is intended to combine these two research topics and investigate if the work location influences the technical debt of software artifacts.
+
+
+
+## 2. Describe the general objectives of the experiment (max 1 paragraph)
+The objective of this experiment is to compare the quality of software artifacts produced by teams working in different locations. The aim is to investigate if the work place influences the quality of the code.  
+
+## 3. Describe the design of the experiment
+The experiment will consist of working place being a factor and the experience of the team being a blocking factor. The factor working place will be composed of three levels: everyone working from home (Home), a mixture of the team working from home and from the office (Mix), everyone working in the office (Office). The experience of the team is believed to effect the outcome of the experiment, but this influence and variation is not of interest in our study and thus used as a blocking variable. The blocking variable is measured as the average time each team member has worked as a software engineer and it has two levels: less experiences (LE) and more experienced (ME). A team is classified as less experienced if the average time working as a software engineer of the team members is 10 years or less, otherwise the team is classified as more experienced. The experiment will have two controlling variables. The first is too ensure the teams have the same workload and the second to control the work hours and breaks, and thus ensuring consistency in work time. 
+
+The experiment will be a block-design experiment with the following 6 experimental groups:
+
+- G1: Work place = Home, Experience = LE
+- G2: Work place = Home, Experience = ME
+- G3: Work place = Mix, Experience = LE
+- G4: Work place = Mix, Experience = ME
+- G5: Work place = Office, Experience = LE
+- G6: Work place = Office, Experience = ME
+
+The population consists of software engineering teams from the company ABC, where the teams are working within various business areas of the company. We aim at achieving a balanced design, so it is therefore necessary to first stratify the population based on the experience level of the team. After this, an equal amount of less and more teams can be randomly selected and the three treatments can be evenly distributed within each.
+
+
+## 4. Conduct a power analysis
+We have used the *pwr* package in R to conduct a power analysis. The package is based on the concepts described by Cohen [@cohen2013statistical]. According to Cohen, the four parameters: power, significance criterion, sample size and effect size are so tightly related so that if three of them are fixed the fourth can be given. We have used the *pwr::pwr.anova.test* method to get the estimated effect size, as shown below. The function assumes that we have a balanced design with equal amount of teams in each group and that we have 10 teams for each experimental group. We have chosen a signifance level of 0.05 and a power (which is the likelihood of correctly rejecting the null hypothesis) of 0.9. 
+
+```{r power-analysis}
+pwr::pwr.anova.test(k= 6, n = 10, sig.level = 0.05, power = 0.9)
+```
+This gives us an effect size of approx. 55%. Cohens presents conventional criterion for the effect sizes where 0.3 is small effect, 05 is medium and 0.8 is a large effect size. Thus, the estimated effect size is just above a medium effect size. While the p-value could be useful to determine if an effect exists in the population, the effect size is important since it provides the magnitude of differences among groups and thus the strength of the experimental results.
+
+
+## 5. What are your independent variables?
+The experiment has one independent variable, namely the working place of the team. It is a categorical variable with three categories: home, mix and office. 
+
+## 6. What are your dependent variables?
+The dependent variable of the experimental design is the amount of technical debt. Technical debt is measured in time and is thus measured on a continuous scale.
+
+## 7. Describe your specific experiment hypotheses.
+The design includes one null and one alternative hypothesis:
+
+h0: The work location has no affect on the technical debt. 
+h1: The work location has an affect on the technical debt.
+
+## 8. Describe your data collection procedure (max 1 paragraph)
+SonarQube is a tool to used for continuous inspection of code quality and includes several metrcis such as technical debt. The tool be used to measure technical debt of the software artifacts produced by the teams.
+
+## 9. Describe how you are going to analyze the data to answer your hypotheses. 
+We will conduct a balanced one way ANOVA??
+
+## 10. Discuss possible threats to validity and replication considerations
+
+*Validity.*
+We have focused on the four main types of validity threats discussed by @wohlin2012experimentation.
+
+1. **Conclusion validity**. The conclusion validity is strongly related to analyzing the outcome and determining if there is a significant effect of the factor. This could be determined by using the different tools provided by R and supporting packages and functions. However, we must analyze the outcome together with the assumptions (such as chosen power, effect size and significance level) to make appropriate conclusions.
+2. **Construct validity**. This aspect is related to the generalization of the results to the theory behind it and is connected to how well the experiment measured what is intended. One threat related to this is the fact that the behavior of the subjects participating in the experiment might be affected just by the fact that they are part of the study. It is a valid threat in our case since it is quite hard to apply the treatment in this study without them being aware of it.
+3. **Internal validity**. If we observe a significant effect of a treatment on the outcome, we might still not be sure that the observed factors was the actual cause. There might exist other factors that we have not included or controlled that effect the outcome. One example could be that employees working from home do not need to commute to work.
+4. ***External validity**. This is described in the replication section below, but summarizing it can be hard to repeat the experiment since there are many specific conditions that can not be measured or controlled in our experiment. 
+
+*Replication.*
+Replication is an extremely important aspect since a new knowledge is generally not accepted until it has been repeated and verified by external agents [@juristo2013basics]. According to @juristo2013basics, there are two type of replication: external replication where the experiment is repeated by independent researchers and internal validation which is run within the experiment itself. Possible threats to both internal and external validations is the problem of similarity between repeated experiments. Replication of an experiments aims at repeated the experiment under specific preconditions. In our experiment, there are multiple elements and conditions, such as the team members, the tasks and experience levels which are very speficic and thereby hard to replicate.   
+
+# Contributions
+
+All four of us attended the lab. During the lab, we started discussing the design of the experiment. We started by creating a draft registration in *osf.io* which helped guide us through the first steps of the design.
+
+# References
