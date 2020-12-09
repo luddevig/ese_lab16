@@ -7,10 +7,10 @@ author:
 - Tim Grube (gusgruti@student.gu.se)
 date: "`r format(Sys.time(), '%d.%m.%Y')`"
 output:
-  pdf_document:
-    latex_engine: xelatex
   html_document:
     df_print: paged
+  pdf_document:
+    latex_engine: xelatex
 bibliography: lab3references.bib
 ---
 
@@ -98,21 +98,21 @@ Replication is an extremely important aspect since a new knowledge is generally 
 
 # Generating the data
 
-## 1. Generating a population of size 150
+## 1. Generating a population of size 150.
 
 ```{r 1}
 N <- 150
 ```
 
-## 2. Suppose that the observations come from a normal population. Let us define a model to generate the data
+## 2. Supposing the observations come from a normal population and then define a model to generate the data.
 
 ```{r 2}
 model <- function(N, X_experience, X_workplace, likert=T){
- ref <- 2                      #LE, Office(reference group)
-#main effects   it is not necessary for coefficients to match the data that we have designed for
- experience_ME <- 0.5          #coef for ME  
- workplace_Home <- 0.55        #coef for work from home 
- workplace_Mix <- 0.25         #coef for mixture of work at home/office
+ ref <- 2                       #LE, Office(reference group)
+# main effects
+ experience_ME <- 0.5           #coef for ME  
+ workplace_Home <- 0.55         
+ workplace_Mix <- 0.25          
  
 # second order interactions
  experienceME_workplaceHome <- 0   # no interactions
@@ -135,7 +135,7 @@ model <- function(N, X_experience, X_workplace, likert=T){
 }
 ```
 
-## 3. Now we can create a data frame population for each of the 6 groups
+## 3. Creating a data frame of population for each goup.
 
 ```{r 3}
 set.seed(7000)
@@ -208,7 +208,7 @@ techdebt=model(
 )
 ```
 
-## 4. Lets create a balanced sample for each group with 10 in each group
+## 4. Creating a balanced sample for each group with 10 teams in each group.
 
 ```{r 4}
 n <- 10
@@ -227,38 +227,37 @@ levels(d$Experience) <- c("LE", "ME")
 levels(d$Workplace) <- c("Office", "Home", "Mix")
 ```
 
-## 5. Now we can genrate our linear model to fit the data
+## 5. Genrating the linear model to fit the data.
 
 ```{r 5}
-m1 <- lm(techdebt ~ Workplace + Experience, data=d)    #blocking design, no interactions
+m1 <- lm(techdebt ~ Workplace + Experience, data=d) 
 summary(m1)
 ```  
-## 5.1 Tesing Normality(qqPlot)
+### 5.1 Tesing Normality by using qqPlot and Shapiro-Wilk test.
 
 ```{r 5.1}
+#hist(m1$residuals, main = "Histogram", xlab = "Residuals")     *optional
 qqPlot(m1)
-#hist(m1$residuals, main = "Histogram", xlab = "Residuals")     optional
-#shapiro.test(m1$residuals)   #no need since sample size is large, high uncertainty in p-value
+shapiro.test(m1$residuals)
 ```
-## 5.2 
+### 5.2 Checking whether the model is in good quality by using the function of residualPlot().
 
 ```{r 5.2}
 residualPlot(m1)
 ```
 
 
-## 5.3 Present the ANOVA table(one-way Anova analysis)
+### 5.3 Presenting the ANOVA table(one-way Anova).
 
 ```{r 5.3}
 Anova(m1)
 ```
 
-## 5.4 Tukey HSD post-hoc test
+### 5.4 Using Tukey HSD post-hoc test to know the differences among groups.
 
 ```{r 5.4}
 TukeyHSD(aov(techdebt ~ Workplace + Experience, data=d))
 ```
-
 
 # Contributions
 
