@@ -72,10 +72,10 @@ The experiment has one independent variable, namely the working place of the tea
 The dependent variable of the experimental design is the amount of technical debt. Technical debt is measured in time and is thus measured on a continuous scale.
 
 ## 7. Describe your specific experiment hypotheses.
-The design includes one null and one alternative hypothesis:
+The design includes one null and one alternative hypothesis:  
 
-h0: The work location has no affect on the technical debt. 
-h1: The work location has an affect on the technical debt.
+- h0: The work location has **no** affect on the technical debt. 
+- h1: The work location has **an** affect on the technical debt.
 
 ## 8. Describe your data collection procedure (max 1 paragraph)
 SonarQube is a tool used for continuous inspection of code quality and includes several metrcis such as technical debt. The tool be used to measure technical debt of the software artifacts produced by the teams.
