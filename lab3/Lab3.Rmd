@@ -98,7 +98,7 @@ Replication is an extremely important aspect since a new knowledge is generally 
 
 # Generating the data
 
-## 1. Generating a population of size 200
+## 1. Generating a population of size 150
 
 ```{r 1}
 N <- 150
