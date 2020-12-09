@@ -58,6 +58,8 @@ The population consists of software engineering teams from the company ABC, wher
 We have used the *pwr* package in R to conduct a power analysis. The package is based on the concepts described by Cohen [@cohen2013statistical]. According to Cohen, the four parameters: power, significance criterion, sample size and effect size are so tightly related so that if three of them are fixed the fourth can be given. We have used the *pwr::pwr.anova.test* method to get the estimated effect size, as shown below. The function assumes that we have a balanced design with equal amount of teams in each group and that we have 10 teams for each experimental group. We have chosen a signifance level of 0.05 and a power (which is the likelihood of correctly rejecting the null hypothesis) of 0.9. 
 
 ```{r power-analysis}
+pwr.f2.test(u=5, f2=0.25, power=0.9)
+
 pwr::pwr.anova.test(k= 6, n = 10, sig.level = 0.05, power = 0.9)
 ```
 This gives us an effect size of approx. 55%. Cohens presents conventional criterion for the effect sizes where 0.3 is small effect, 0.5 is medium and 0.8 is a large effect size. Thus, the estimated effect size is just above a medium effect size. While the p-value could be useful to determine if an effect exists in the population, the effect size is important since it provides the magnitude of differences among groups and thus the strength of the experimental results.
@@ -98,16 +100,16 @@ Replication is an extremely important aspect since a new knowledge is generally 
 
 # Generating the data
 
-## 1. Generating a population of size 150.
+## 1. Generating a population of size 72.
 
 ```{r 1}
-N <- 150
+N <- 72
 ```
 
 ## 2. Supposing the observations come from a normal population and then define a model to generate the data.
 
 ```{r 2}
-model <- function(N, X_experience, X_workplace, likert=T){
+model <- function(N, X_experience, X_workplace){
  ref <- 2                       #LE, Office(reference group)
 # main effects
  experience_ME <- 0.5           #coef for ME  
@@ -127,8 +129,8 @@ model <- function(N, X_experience, X_workplace, likert=T){
  
 #This is the linear model that controls the response variable
  techdebt <- ref + experience_ME*x_experience_ME +  workplace_Home*x_workplace_Home + workplace_Mix*x_workplace_Mix
- techdebt_out<- rnorm(N, mean=techdebt, sd = response_std) # This generates a normal distribution if(Likert)
- techdebt_out<- findInterval(techdebt_out,vec=c(-Inf,-2.5,-1, 1,2.5,Inf)+ref)
+ techdebt_out<- rnorm(N, mean=techdebt, sd = response_std) # This generates a normal distribution
+
 # this is fairly unbiased for standard deviation of 1 in the responses and 0 mean. #That is why we add the value of the reference group.
 # Here the reference will have a mean of 3 in Likert scale
  return(techdebt_out)
@@ -208,10 +210,10 @@ techdebt=model(
 )
 ```
 
-## 4. Creating a balanced sample for each group with 10 teams in each group.
+## 4. Creating a balanced sample for each group with 12 teams in each group.
 
 ```{r 4}
-n <- 10
+n <- 12 
 all_groups <- list(g1, g2, g3, g4, g5, g6)
 
 #creating an empty data frame from an existing one (with the same column)
@@ -236,7 +238,6 @@ summary(m1)
 ### 5.1 Tesing Normality by using qqPlot and Shapiro-Wilk test.
 
 ```{r 5.1}
-#hist(m1$residuals, main = "Histogram", xlab = "Residuals")     *optional
 qqPlot(m1)
 shapiro.test(m1$residuals)
 ```
