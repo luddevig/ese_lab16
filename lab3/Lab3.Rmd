@@ -15,12 +15,12 @@ bibliography: lab3references.bib
 ---
 
 ```{r setup, include=FALSE}
-# library(tidyverse) 
-# library(car) 
-# library(knitr)
-# library(psych)
+library(tidyverse) 
+library(car) 
+library(knitr)
+library(psych)
 library(pwr)
-# library(stargazer)
+library(stargazer)
 ```
 
 # Design an experiment
@@ -92,7 +92,173 @@ We have focused on the four main types of validity threats discussed by @wohlin2
 4. ***External validity**. This is described in the replication section below, but summarizing it can be hard to repeat the experiment since there are many specific conditions that can not be measured or controlled in our experiment. 
 
 *Replication.*
-Replication is an extremely important aspect since a new knowledge is generally not accepted until it has been repeated and verified by external agents [@juristo2013basics]. According to @juristo2013basics, there are two type of replication: external replication where the experiment is repeated by independent researchers and internal validation which is run within the experiment itself. Possible threats to both internal and external validations is the problem of similarity between repeated experiments. Replication of an experiment aims at repeating the experiment under specific preconditions. In our experiment, there are multiple elements and conditions, such as the team members, the tasks and experience levels which are very specific and thereby hard to replicate.   
+Replication is an extremely important aspect since a new knowledge is generally not accepted until it has been repeated and verified by external agents [@juristo2013basics]. According to @juristo2013basics, there are two type of replication: external replication where the experiment is repeated by independent researchers and internal validation which is run within the experiment itself. Possible threats to both internal and external validations is the problem of similarity between repeated experiments. Replication of an experiment aims at repeating the experiment under specific preconditions. In our experiment, there are multiple elements and conditions, such as the team members, the tasks and experience levels which are very specific and thereby hard to replicate.
+
+
+
+# Generating the data
+
+## 1. Generating a population of size 200
+
+```{r 1}
+N <- 150
+```
+
+## 2. Suppose that the observations come from a normal population. Let us define a model to generate the data
+
+```{r 2}
+model <- function(N, X_experience, X_workplace, likert=T){
+ ref <- 2                      #LE, Office(reference group)
+#main effects   it is not necessary for coefficients to match the data that we have designed for
+ experience_ME <- 0.5          #coef for ME  
+ workplace_Home <- 0.55        #coef for work from home 
+ workplace_Mix <- 0.25         #coef for mixture of work at home/office
+ 
+# second order interactions
+ experienceME_workplaceHome <- 0   # no interactions
+ experienceME_workplaceMix <- 0
+
+#input 
+ x_experience_ME <- X_experience[1]
+ x_workplace_Home <-  X_workplace[1]
+ x_workplace_Mix <- X_workplace[2]
+ 
+ response_std <- 1.0  
+ 
+#This is the linear model that controls the response variable
+ techdebt <- ref + experience_ME*x_experience_ME +  workplace_Home*x_workplace_Home + workplace_Mix*x_workplace_Mix
+ techdebt_out<- rnorm(N, mean=techdebt, sd = response_std) # This generates a normal distribution if(Likert)
+ techdebt_out<- findInterval(techdebt_out,vec=c(-Inf,-2.5,-1, 1,2.5,Inf)+ref)
+# this is fairly unbiased for standard deviation of 1 in the responses and 0 mean. #That is why we add the value of the reference group.
+# Here the reference will have a mean of 3 in Likert scale
+ return(techdebt_out)
+}
+```
+
+## 3. Now we can create a data frame population for each of the 6 groups
+
+```{r 3}
+set.seed(7000)
+
+experience_LE <- c(0)
+experience_ME <- c(1)
+
+workplace_Office <- c(0,0)
+workplace_Home <- c(1,0)
+workplace_Mix <- c(0,1) 
+
+g1 <- data.frame(
+Experience = rep('LE', N), 
+Workplace = rep('Home', N), 
+techdebt=model(
+  N=N,
+  X_experience = experience_LE,
+  X_workplace = workplace_Home
+  )
+)
+
+g2 <- data.frame(
+Experience = rep('ME', N), 
+Workplace = rep('Home', N), 
+techdebt=model(
+  N=N,
+  X_experience = experience_ME,
+  X_workplace = workplace_Home
+  )
+)
+
+g3 <- data.frame(
+Experience = rep('LE', N), 
+Workplace = rep('Mix', N), 
+techdebt=model(
+  N=N,
+  X_experience = experience_LE,
+  X_workplace = workplace_Mix
+  )
+)
+
+g4 <- data.frame(
+Experience = rep('ME', N), 
+Workplace = rep('Mix', N), 
+techdebt=model(
+  N=N,
+  X_experience = experience_ME,
+  X_workplace = workplace_Mix
+  )
+)
+
+g5 <- data.frame(
+Experience = rep('LE', N), 
+Workplace = rep('Office', N), 
+techdebt=model(
+  N=N,
+  X_experience = experience_LE,
+  X_workplace = workplace_Office
+  )
+)
+
+g6 <- data.frame(
+Experience = rep('ME', N), 
+Workplace = rep('Office', N), 
+techdebt=model(
+  N=N,
+  X_experience = experience_ME,
+  X_workplace = workplace_Office
+  )
+)
+```
+
+## 4. Lets create a balanced sample for each group with 10 in each group
+
+```{r 4}
+n <- 10
+all_groups <- list(g1, g2, g3, g4, g5, g6)
+
+#creating an empty data frame from an existing one (with the same column)
+d<-g1[0,]
+for(g in all_groups) {
+ d<-rbind(d, dplyr::sample_n(g, size=n)) #appending rows at the end for every group 
+}
+
+d$Experience <-as.factor(d$Experience) 
+d$Workplace <- as.factor(d$Workplace)
+#Don't forget to investigate if R has placed the correct levels in the correct order #The order that you designed the model
+levels(d$Experience) <- c("LE", "ME")
+levels(d$Workplace) <- c("Office", "Home", "Mix")
+```
+
+## 5. Now we can genrate our linear model to fit the data
+
+```{r 5}
+m1 <- lm(techdebt ~ Workplace + Experience, data=d)    #blocking design, no interactions
+summary(m1)
+```  
+## 5.1 Tesing Normality(qqPlot)
+
+```{r 5.1}
+qqPlot(m1)
+#hist(m1$residuals, main = "Histogram", xlab = "Residuals")     optional
+#shapiro.test(m1$residuals)   #no need since sample size is large, high uncertainty in p-value
+```
+## 5.2 
+
+```{r 5.2}
+residualPlot(m1)
+```
+
+
+## 5.3 Present the ANOVA table(one-way Anova analysis)
+
+```{r 5.3}
+Anova(m1)
+```
+
+## 5.4 Tukey HSD post-hoc test
+
+```{r 5.4}
+TukeyHSD(aov(techdebt ~ Workplace + Experience, data=d))
+```
+
 
 # Contributions
 
