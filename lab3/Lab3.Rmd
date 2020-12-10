@@ -56,16 +56,15 @@ The population consists of software engineering teams from the company ABC, wher
 
 ### 4. Power analysis
 
-<!-- TODO: Correct power analysis, why did we choose f2=0.25, ... -->
+We have used the *pwr* package in R to conduct a power analysis. The package is based on the concepts described by Cohen [@cohen1988statistical]. According to Cohen, the five parameters power, significance criterion, degrees of freedom for numerator, degrees of freedom for denominator, and effect size, are so tightly related so that if four of them are fixed the fifth can be given. We have used the *pwr::pwr.f2.test* method to get the estimated effect size, as shown below.
 
-We have used the *pwr* package in R to conduct a power analysis. The package is based on the concepts described by Cohen [@cohen2013statistical]. According to Cohen, the four parameters power, significance criterion, sample size and effect size are so tightly related so that if three of them are fixed the fourth can be given. We have used the *pwr::pwr.anova.test* method to get the estimated effect size, as shown below. The function assumes that we have a balanced design with equal amount of teams in each group and that we have 12 teams for each experimental group. We have chosen a significance level of 0.05 and a power (which is the likelihood of correctly rejecting the null hypothesis) of 0.9. 
+Base on the experiment background we have 6 groups, so the value of u(degrees of freedom for the numerator) is 5(6-1). Compared to the control(LE, Office), we assume that the factor of work place would explain 20% influence on the outcome(Technical Debt), so effect size is 0.25(f2=0.2/1-0.2) with a confidence of 95% (sig.level=0.05) and has the power of 90% (power=0.09) to know the more efficient workplace and run experiments.
 
 ```{r power-analysis}
-pwr.f2.test(u=5, f2=0.25, power=0.9)
-
-pwr::pwr.anova.test(k= 6, n = 10, sig.level = 0.05, power = 0.9)
+pwr::pwr.f2.test(u=5, f2=0.2/0.8, power=0.9)
 ```
-This gives us an effect size of approx. 55%. Cohens presents conventional criterion for the effect sizes where 0.3 is small effect, 0.5 is medium and 0.8 is a large effect size. Thus, the estimated effect size is just above a medium effect size. While the p-value could be useful to determine if an effect exists in the population, the effect size is important since it provides the magnitude of differences among groups and thus the strength of the experimental results.
+
+From the result, we can deduce that the sample size should be at least 72 teams(66+5+1) and 72 will be divided in 6 groups to be able to have a statistically significant model, so each group should have 12 teams to conduct experiment.
 
 ### 5. Independent variables
 
@@ -138,10 +137,10 @@ model <- function(N, X_experience, X_workplace){
  
  response_std <- 1.0  
  
-#Öinear model that controls the response variable
+#Linear model that controls the response variable
  techdebt <- ref + experience_ME*x_experience_ME + workplace_Home*x_workplace_Home + workplace_Mix*x_workplace_Mix
  
- # Generate normal distribution
+# Generate normal distribution
  techdebt_out<- rnorm(N, mean=techdebt, sd = response_std) 
 
  return(techdebt_out)
