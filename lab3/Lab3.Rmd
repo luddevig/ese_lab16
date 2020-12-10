@@ -221,7 +221,7 @@ techdebt=model(
 )
 ```
 
-*Creating a balanced sample for each group with 12 teams in each group.*
+*Creating a balanced sample for each group with the same number of teams in each group.*
 
 ```{r 4}
 n <- N / 6
