@@ -108,29 +108,27 @@ Replication is an extremely important aspect since a new knowledge is generally 
 
 ### Data generation
 
-*Generating a population of size 72.*
+First, a population size of 2000 is generated.
 
 ```{r 1}
-N <- 72
+N <- 2000
 ```
 
-*Supposing the observations come from a normal population and then define a model to generate the data.*
+Then we designed the model. "Less experienced" and "Office" is our reference group. We took the value 5 as our expected mean for technical debt that exists at the end of the experiment.
+
+As the main effect we set that working from home decreases the amount of technical debt, whereas a mixed team increases the technical debt. The experience has a slightly negative effect.
 
 ```{r 2}
 model <- function(N, X_experience, X_workplace){
  
-  ref <- 2 #LE, Office (reference group)
+  ref <- 5 #LE, Office (reference group)
 
-# main effects
- experience_ME <- 0.1
- workplace_Home <- 0.75         
- workplace_Mix <- 0.6         
- 
-# second order interactions (TODO remove?)
- experienceME_workplaceHome <- 0   # no interactions
- experienceME_workplaceMix <- 0
+# Main effects
+ experience_ME <- -0.1
+ workplace_Home <- -0.3         
+ workplace_Mix <- 0.7
 
-#input 
+# Input 
  x_experience_ME <- X_experience[1]
  x_workplace_Home <-  X_workplace[1]
  x_workplace_Mix <- X_workplace[2]
@@ -138,7 +136,10 @@ model <- function(N, X_experience, X_workplace){
  response_std <- 1.0  
  
 #Linear model that controls the response variable
- techdebt <- ref + experience_ME*x_experience_ME + workplace_Home*x_workplace_Home + workplace_Mix*x_workplace_Mix
+ techdebt <- ref +
+   experience_ME*x_experience_ME + 
+   workplace_Home*x_workplace_Home + 
+   workplace_Mix*x_workplace_Mix
  
 # Generate normal distribution
  techdebt_out<- rnorm(N, mean=techdebt, sd = response_std) 
@@ -147,10 +148,10 @@ model <- function(N, X_experience, X_workplace){
 }
 ```
 
-*Creating a data frame of population for each group.*
+As described in the experiment design, we have 6 different combinations of experience and workplace, so we have 6 groups.
 
 ```{r 3}
-set.seed(7000)
+set.seed(8123)
 
 experience_LE <- c(0)
 experience_ME <- c(1)
@@ -161,16 +162,36 @@ workplace_Mix <- c(0,1)
 
 g1 <- data.frame(
 Experience = rep('LE', N), 
-Workplace = rep('Home', N), 
+Workplace = rep('Office', N), 
 techdebt=model(
   N=N,
   X_experience = experience_LE,
-  X_workplace = workplace_Home
+  X_workplace = workplace_Office
   )
 )
 
 g2 <- data.frame(
 Experience = rep('ME', N), 
+Workplace = rep('Office', N), 
+techdebt=model(
+  N=N,
+  X_experience = experience_ME,
+  X_workplace = workplace_Office
+  )
+)
+
+g3 <- data.frame(
+Experience = rep('LE', N), 
+Workplace = rep('Home', N), 
+techdebt=model(
+  N=N,
+  X_experience = experience_LE,
+  X_workplace = workplace_Home
+  )
+)
+
+g4 <- data.frame(
+Experience = rep('ME', N), 
 Workplace = rep('Home', N), 
 techdebt=model(
   N=N,
@@ -179,51 +200,32 @@ techdebt=model(
   )
 )
 
-g3 <- data.frame(
-Experience = rep('LE', N), 
-Workplace = rep('Mix', N), 
-techdebt=model(
-  N=N,
-  X_experience = experience_LE,
-  X_workplace = workplace_Mix
-  )
-)
-
-g4 <- data.frame(
-Experience = rep('ME', N), 
-Workplace = rep('Mix', N), 
-techdebt=model(
-  N=N,
-  X_experience = experience_ME,
-  X_workplace = workplace_Mix
-  )
-)
-
 g5 <- data.frame(
 Experience = rep('LE', N), 
-Workplace = rep('Office', N), 
+Workplace = rep('Mix', N), 
 techdebt=model(
   N=N,
   X_experience = experience_LE,
-  X_workplace = workplace_Office
+  X_workplace = workplace_Mix
   )
 )
 
 g6 <- data.frame(
 Experience = rep('ME', N), 
-Workplace = rep('Office', N), 
+Workplace = rep('Mix', N), 
 techdebt=model(
   N=N,
   X_experience = experience_ME,
-  X_workplace = workplace_Office
+  X_workplace = workplace_Mix
   )
 )
+
 ```
 
-*Creating a balanced sample for each group with the same number of teams in each group.*
+For the first assignment, we take the calculated sample size of 72 which is divided into 6 groups with 12 teams each - so a balanced design:
 
 ```{r 4}
-n <- N / 6
+n <- 12
 all_groups <- list(g1, g2, g3, g4, g5, g6)
 
 #Creating an empty data frame from an existing one (with the same column)
@@ -240,49 +242,84 @@ levels(d$Experience) <- c("LE", "ME")
 levels(d$Workplace) <- c("Office", "Home", "Mix")
 ```
 
-### Data analysis
+Then we created a linear model. The fitted model looks like this:
 
-*Generating the linear model to fit the data.*
+y = 5 + 0.2503 * ExperienceME + 1.1963 * WorkplaceHome + 0.2264 * WorkplaceMix
 
-```{r 5}
-m1 <- lm(techdebt ~ Workplace + Experience, data=d) 
+We expected the coefficient for WorkplaceHome to be negative. However, it is strongly positive and even higher than for WorkplaceMix. The model obviously has a problem here.
+
+```{r 5a}
+m1 <- lm(techdebt ~ Experience + Workplace, data=d) 
 summary(m1)
 ```  
-Testing normality by using qqPlot and Shapiro-Wilk test.
 
-```{r 5.1}
-qqPlot(m1)
-shapiro.test(m1$residuals)
+This can also be seen, when checking whether the true coefficients are within the confidence interval. This is the case for ExperienceME and WorkplaceMix, but not for WorkplaceHome (as already mentioned, the WorkplaceHome coefficient is strongly positive instead of negative).
+
+```{r 5.a1}
+confint(m1, level = 0.95)
+```  
+
+Now the same is done for half the sample size:
+
+```{r 4b}
+n <- 6
+all_groups <- list(g1, g2, g3, g4, g5, g6)
+
+#Creating an empty data frame from an existing one (with the same column)
+d<-g1[0,]
+for(g in all_groups) {
+ d<-rbind(d, dplyr::sample_n(g, size=n)) #Appending rows at the end for every group 
+}
+
+d$Experience <-as.factor(d$Experience) 
+d$Workplace <- as.factor(d$Workplace)
+
+#Set correct levels
+levels(d$Experience) <- c("LE", "ME")
+levels(d$Workplace) <- c("Office", "Home", "Mix")
 ```
-*Checking whether the model is in good quality by using the function of residualPlot().*
 
-```{r 5.2}
-residualPlot(m1)
-```
+This time, the fitted model looks like this:
 
+y = 5 + 0.5381 * ExperienceME + 1.6355 * WorkplaceHome + 0.4346 * WorkplaceMix
 
-*Presenting the ANOVA table(one-way Anova).*
+The problems from before still exist.
+
+```{r 5b}
+m2 <- lm(techdebt ~ Experience + Workplace, data=d) 
+summary(m2)
+```  
+
+As before, when checking the true coefficients, the coefficients for ExperienceME and WorkplaceMix are in the confidence interval, WorkplaceHome is not.
+
+```{r 5b.1}
+confint(m2, level = 0.95)
+```  
+
+The main difference between the two differently powered experiments is the different explanatory power. This is for example shown by an increased standard error for all coefficients.
+
+*Conclusion*
+
+The Anova table shows a F value of 10.305 for the workplace. The critical F value is 2.3933. This means that there is a significant effect of the workplace. 
 
 ```{r 5.3}
 Anova(m1)
 ```
 
-*Using Tukey HSD post-hoc test to know the differences among groups.*
+The Tukey HSD post-hoc supports this. It shows that there are significant differences between Home and Office as well as between Home and Mix. There is not a big difference between Office and Mix. Summarized, if the whole team works from home, a lower amount of technical debt is usually achieved.
 
 ```{r 5.4}
 TukeyHSD(aov(techdebt ~ Workplace + Experience, data=d))
 ```
 
-### 1. Sample size from power analysis
+### 3. Pre-registration
 
-TODO
+TODO 1 paragraph: Some benefits of pre-registering an experiment
 
-### 2. Half of sample size from power analysis
-
-TODO
+TODO Link to online-report
 
 # Contributions
 
-All four of us attended the lab. During the lab, we started discussing the design of the experiment. We started by creating a draft registration in *osf.io* which helped guide us through the first steps of the design.
+All four of us attended the lab. During the lab, we started discussing the design of the experiment. We started by creating a draft registration in *osf.io* which helped guiding us through the first steps of the design. Eric continued with writing and completing the report regarding the experiment design. Ludvig completed the online pre-registration. Wenli, Ludvig and Tim were responsible for simulating the data and analyzing it. At the end, everybody read through the whole document, so that everybody knows about all parts of the lab.
 
 # References
