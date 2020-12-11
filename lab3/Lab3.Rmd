@@ -39,7 +39,7 @@ The objective of this experiment is to compare the quality of software artifacts
 
 The experiment will consist of work place being a factor and the experience of the team being a blocking variable. The factor work place will be composed of three levels: everyone working from home (Home), a mixture of the team working from home and from the office (Mix), everyone working in the office (Office). 
 
-The experience of the team is believed to effect the outcome of the experiment, but this influence and variation is not of main interest in our study and thus as a blocking variable. The blocking variable is measured as the average time each team member has worked as a software engineer and it has two levels: less experienced (LE) and more experienced (ME). A team is classified as less experienced if the average time working as a software engineer of the team members is 10 years or less, otherwise the team is classified as more experienced. 
+The experience of the team is believed to effect the outcome of the experiment, but this influence and variation is not of main interest in our study and thus as a blocking variable. The blocking variable is measured as the average time each team member has worked as a software engineer and it has two levels: less experienced (LE) and more experienced (ME). The half of the teams with lower experience are placed in the group less experienced (LE), and the half with more experience are placed in the group more experienced (ME). 
 
 The experiment will have two controlling variables. The first is to ensure that the teams have the same workload and the second is to control the work hours and breaks, and thus ensuring consistency in work time. 
 
