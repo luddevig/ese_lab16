@@ -29,7 +29,7 @@ library(stargazer)
 
 The Covid pandemic has changed the way of working for many companies and their employees. With social distancing and restrictions being implemented by governments and companies, employees are now working from home more than ever before. Even before the pandemic, experiments have been conducted in order to understand the effects of having employees working from home rather in the office. @bloom2014homework published a study where they randomly assigned employees to either work in the office or at home. The experiment indicated that working from home led to an increase in work performance, and the positive effect of working from home has also been discussed in other studies [@hill2003does]. 
 
-The concept of technical debt within the software engineering field is recognized as something that is unavoidable and it is therefore necessary for companies to track, monitor and take action upon the technical debt [@6280547]. This experiment is intended to combine these two research topics and investigate if the work location influences the technical debt of software artifacts.
+The concept of technical debt within the software engineering field is recognized as something that is unavoidable and it is therefore necessary for companies to track, monitor and take action upon the technical debt [@6280547]. This experiment is intended to combine these two research topics and investigate if the work location influences the technical debt of software artefacts.
 
 ### 2. General objectives of the experiment
 
@@ -37,7 +37,7 @@ The objective of this experiment is to compare the quality of software artifacts
 
 ### 3. Design of the experiment
 
-The experiment will consist of work place being a factor and the experience of the team being a blocking variable. The factor work place will be composed of three levels: everyone working from home (Home), a mixture of the team working from home and from the office (Mix), everyone working in the office (Office). 
+The experiment will consist of workplace being a factor and the experience of the team being a blocking variable. The factor workplace will be composed of three levels: everyone working from home (Home), a mixture of the team working from home and from the office (Mix), everyone working in the office (Office). 
 
 The experience of the team is believed to effect the outcome of the experiment, but this influence and variation is not of main interest in our study and thus as a blocking variable. The blocking variable is measured as the average time each team member has worked as a software engineer and it has two levels: less experienced (LE) and more experienced (ME). The half of the teams with lower experience are placed in the group less experienced (LE), and the half with more experience are placed in the group more experienced (ME). 
 
@@ -45,12 +45,12 @@ The experiment will have two controlling variables. The first is to ensure that 
 
 The experiment will be a block-design experiment with the following 6 experimental groups:   
 
-- G1: Work place = Home, Experience = LE
-- G2: Work place = Home, Experience = ME
-- G3: Work place = Mix, Experience = LE
-- G4: Work place = Mix, Experience = ME
-- G5: Work place = Office, Experience = LE
-- G6: Work place = Office, Experience = ME
+- G1: Workplace = Office, Experience = LE
+- G2: Workplace = Office, Experience = ME
+- G3: Workplace = Home, Experience = LE
+- G4: Workplace = Home, Experience = ME
+- G5: Workplace = Mix, Experience = LE
+- G6: Workplace = Mix, Experience = ME
 
 The population consists of software engineering teams from the company ABC, where the teams are working within various business areas of the company. We aim at achieving a balanced design, so it is therefore necessary to first stratify the population based on the experience level of the team. After this, an equal amount of less and more teams can be randomly selected and the three treatments can be evenly distributed within each.
 
@@ -68,7 +68,7 @@ From the result, we can deduce that the sample size should be at least 72 teams(
 
 ### 5. Independent variables
 
-The experiment has one independent variable, namely the work place of the team. It is a categorical variable with three categories: home, mix and office. 
+The experiment has one independent variable, namely the workplace of the team. It is a categorical variable with three categories: home, mix and office. 
 
 ### 6. Dependent variables
 
@@ -87,7 +87,7 @@ SonarQube is a tool used for continuous inspection of code quality and includes 
 
 ### 9. Plan for analysis of data to answer hypotheses
 
-As we have only one factor work place, we will do a one-way ANOVA to determine whether there is a significant difference between the the groups.
+As we have only one factor of workplace, we will do a one-way ANOVA to determine whether there is a significant difference between the the groups.
 
 ### 10. Possible threats to validity and replication considerations
 
@@ -312,11 +312,11 @@ The Tukey HSD post-hoc supports this. It shows that there are significant differ
 TukeyHSD(aov(techdebt ~ Workplace + Experience, data=d))
 ```
 
-### 3. Pre-registration
+# Pre-registration
 
-TODO 1 paragraph: Some benefits of pre-registering an experiment
+Our pre-registering experiment can provide a guideline for researchers and students about how to design a standardized experiment for a problem in software engineering field. We design an experiment intending to combine the workplace and technical debt topics and then investigate if the work location influences the technical debt of software artefacts. So if they want to dig into those topics they can refer to our design and then conduct the experiment.
 
-TODO Link to online-report
+All members in our group had been added in the experiment design and we all approve the registration of our experiment in the *Open Science Framework platform*. Here is the link: https://osf.io/qd942.
 
 # Contributions
 
