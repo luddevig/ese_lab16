@@ -7,10 +7,10 @@ author:
 - Tim Grube (gusgruti@student.gu.se)
 date: "`r format(Sys.time(), '%d.%m.%Y')`"
 output:
-  html_document:
-    df_print: paged
   pdf_document:
     latex_engine: xelatex
+  html_document:
+    df_print: paged
 bibliography: lab3references.bib
 ---
 
@@ -58,13 +58,13 @@ The population consists of software engineering teams from the company ABC, wher
 
 We have used the *pwr* package in R to conduct a power analysis. The package is based on the concepts described by Cohen [@cohen1988statistical]. According to Cohen, the five parameters power, significance criterion, degrees of freedom for numerator, degrees of freedom for denominator, and effect size, are so tightly related so that if four of them are fixed the fifth can be given. We have used the *pwr::pwr.f2.test* method to get the estimated effect size, as shown below.
 
-Base on the experiment background we have 6 groups, so the value of u(degrees of freedom for the numerator) is 5(6-1). Compared to the control(LE, Office), we assume that the factor of work place would explain 20% influence on the outcome(Technical Debt), so effect size is 0.25(f2=0.2/1-0.2) with a confidence of 95% (sig.level=0.05) and has the power of 90% (power=0.09) to know the more efficient workplace and run experiments.
+Base on the experiment background we have 6 groups, so the value of u(degrees of freedom for the numerator) is 5(6-1). Compared to the control(LE, Office), we assume that the factor of workplace would explain 20% influence on the outcome(Technical Debt), so effect size is 0.25(f2=0.2/1-0.2) with a confidence of 95% (sig.level=0.05) and has the power of 90% (power=0.09) to know the more efficient workplace and run experiments.
 
 ```{r power-analysis}
 pwr::pwr.f2.test(u=5, f2=0.2/0.8, power=0.9)
 ```
 
-From the result, we can deduce that the sample size should be at least 72 teams(66+5+1) and 72 will be divided in 6 groups to be able to have a statistically significant model, so each group should have 12 teams to conduct experiment.
+From the result, we can deduce that the sample size should be at least 72 teams(66+5+1) and 72 teams will be divided into 6 groups to be able to have a statistically significant model, so each group should have 12 teams to conduct the experiment.
 
 ### 5. Independent variables
 
@@ -87,7 +87,7 @@ SonarQube is a tool used for continuous inspection of code quality and includes 
 
 ### 9. Plan for analysis of data to answer hypotheses
 
-As we have only one factor of workplace, we will do a one-way ANOVA to determine whether there is a significant difference between the the groups.
+As we have only one factor of the workplace and there are same numbers of observations in each group we will do a balanced one-way ANOVA to determine whether there is a significant difference between the groups.
 
 ### 10. Possible threats to validity and replication considerations
 
