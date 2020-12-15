@@ -254,7 +254,7 @@ The Tukey test confirms that the cover is statistically significant, as a cover 
 
 An analysis of the interaction effects by looking at the comparison of all the different pairs indicates that there exist three statistically significant cases (p-value is less than 0.05). The three significant cases all include a comparison with one of them having the Character as both Cover and Summary, and the expected engagement level is lower for all cases. However, since the other cases are not significant, we can not determine which of the combinations is predicted to yield the highest engagement level. We can therefore only conclude that having the Character in both the Cover and Summary, will likely reduce the engagement level.    
 
-**Conclusion** - Both the Cover and the interaction effect between the Cover and Summary are statistically significant. The pairwise analysis from the Tukey test suggested that any combination other than having the character in both the Cover and Summary will give the highest engagement level.   
+**Conclusion** - Both the Cover and the interaction effect between the Cover and Summary are statistically significant. The pairwise analysis from the Tukey test suggested that any combination other than having the character in both the Cover and Summary will give a higher engagement level.   
 
 
 ## Contributions
