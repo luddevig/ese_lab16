@@ -202,7 +202,7 @@ A visual inspection of the below scatter plot indicates that there is a clear di
 plot(lm3,3)
 ```
 
-The Levene's test supports the statement of the data being heteroscedastic. The F value is higher than the the critical value and the p-value is lower than a significance value of 0.05. The Levene's test suggests that the null hypothesis of equal variances can be rejected. We should not rely too much on the Levene's test since we have a large sample size which can affect the results of the test.  
+The Levene's test supports the statement of the data being heteroscedastic. The F value is higher than the the critical value and the p-value is lower than a significance value of 0.05, so the null hypothesis of equal variances can be rejected. However, because of its robustness to the violation of assumptions especially with large sample sizes like in this case, we should not rely too much on it.
 
 ```{r twoWayAnova-homoscedasticity-levene}
 leveneTest(lm3)
